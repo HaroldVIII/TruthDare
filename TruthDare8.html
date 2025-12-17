@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festive Truth or Dare</title>
+    <style>
+        :root {
+            --truth-color: #fdfbf7;
+            --truth-text: #b8860b;
+            --dare-color: #8b0000;
+            --dare-text: #ffffff;
+            --bg-christmas: #0f2c1f;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-christmas);
+            overflow-x: hidden;
+            color: white;
+            user-select: none;
+        }
+
+        /* --- 1. Animations: Snow (Top Only), Deer, Tree --- */
+        
+        /* Snow confined to top 50vh */
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh; 
+            pointer-events: none;
+            z-index: 1;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            animation: fall linear infinite;
+        }
+
+        /* Running Deer Animation */
+        .deer-container {
+            position: fixed;
+            bottom: 15%; /* Run above the bottom cards slightly */
+            left: -100px;
+            font-size: 3rem;
+            z-index: 5;
+            pointer-events: none;
+            animation: runAcross 20s linear infinite;
+        }
+
+        .deer-icon {
+            display: block;
+            animation: bob 0.5s infinite alternate; /* Bobbing head effect */
+        }
+
+        @keyframes runAcross {
+            0% { left: -100px; transform: scaleX(1); } /* Start left */
+            40% { left: 110vw; transform: scaleX(1); } /* Run to right */
+            40.01% { transform: scaleX(-1); } /* Flip direction instantly */
+            50% { left: 110vw; transform: scaleX(-1); } /* Wait off screen */
+            90% { left: -100px; transform: scaleX(-1); } /* Run back left */
+            100% { left: -100px; transform: scaleX(1); }
+        }
+
+        @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+
+        /* Fixed Christmas Tree */
+        .xmas-tree {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 4rem;
+            z-index: 20;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        @keyframes fall { to { transform: translateY(60vh); } }
+
+        /* Burst Snow Animation */
+        .burst-flake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: burst 1s forwards;
+        }
+        @keyframes burst {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        /* --- Layout --- */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Settings Panel --- */
+        .settings-panel {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 15px;
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid #c0392b;
+            text-align: center;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+
+        /* 2. Click title to reload */
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-family: 'Georgia', serif; 
+            letter-spacing: 2px; 
+            font-size: 1.5rem; 
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        h1:hover { color: gold; text-shadow: 0 0 10px gold; }
+
+        .control-group { margin-bottom: 12px; }
+        .label-title { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.8rem; opacity: 0.8; text-transform: uppercase;}
+
+        /* Styled Checkboxes */
+        .checkbox-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .checkbox-group input[type="radio"] { display: none; }
+        .checkbox-group label {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .checkbox-group input[type="radio"]:checked + label {
+            background: #c0392b; border-color: #e74c3c; font-weight: bold; box-shadow: 0 0 8px #c0392b;
+        }
+
+        #extra-languages { display: none; margin-top: 10px; animation: fadeIn 0.3s; }
+        .toggle-btn {
+            background: none; border: 1px dashed rgba(255,255,255,0.4); color: #ddd;
+            padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; margin-top: 5px;
+        }
+
+        /* Personalize Input Area */
+        #personalize-container {
+            display: none;
+            margin-top: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .input-row { display: flex; gap: 5px; justify-content: center; }
+        #personalize-prompt {
+            padding: 8px; border-radius: 5px; border: none; width: 70%;
+        }
+        #generate-btn {
+            padding: 8px 15px; background: gold; border: none; border-radius: 5px; 
+            color: #8b0000; font-weight: bold; cursor: pointer;
+        }
+        #generate-btn:hover { background: #fff; }
+        #gen-status { font-size: 0.8rem; margin-top: 5px; color: #aaa; min-height: 1.2em; }
+
+        /* --- Game Area --- */
+        .game-area { flex-grow: 1; display: flex; flex-direction: column; }
+        .card {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 15px; text-align: center; cursor: pointer; position: relative; overflow: hidden; min-height: 250px;
+        }
+        .card:active { transform: scale(0.98); }
+        .truth-section { background: var(--truth-color); color: var(--truth-text); border-bottom: 4px solid gold; }
+        .dare-section { background: var(--dare-color); color: var(--dare-text); border-top: 4px solid gold; }
+
+        .card-icon { font-size: 2rem; margin-bottom: 5px; }
+        .card-title { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: 0; }
+        .prompt-content { margin-top: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 120px; }
+        .prompt-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; max-width: 90%; word-wrap: break-word; line-height: 1.4; }
+        .dare-visual { font-size: 5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); display: none; animation: popIn 0.5s; }
+        .click-instruction { position: absolute; bottom: 10px; font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; animation: pulse 2s infinite; pointer-events: none;}
+
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 0.8; } 100% { opacity: 0.4; } }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+        .fade-in { animation: fadeIn 0.5s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .card-title { font-size: 1.4rem; }
+            .prompt-text { font-size: 1.1rem; }
+            .dare-visual { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="snow-container" id="snow-bg"></div>
+    
+    <div class="deer-container">
+        <div class="deer-icon">🦌</div>
+    </div>
+    
+    <div class="xmas-tree">🎄</div>
+
+    <div class="app-container">
+        
+        <div class="settings-panel">
+            <h1 onclick="location.reload()" title="Click to Reset">🎄 Truth or Dare 🎁</h1>
+
+            <div class="control-group">
+                <span class="label-title">Language</span>
+                <div class="checkbox-group">
+                    <input type="radio" name="lang" id="en" value="en" checked onclick="setLang('en')">
+                    <label for="en">🇺🇸 EN</label>
+                    <input type="radio" name="lang" id="fr" value="fr" onclick="setLang('fr')">
+                    <label for="fr">🇫🇷 FR</label>
+                    <input type="radio" name="lang" id="es" value="es" onclick="setLang('es')">
+                    <label for="es">🇪🇸 ES</label>
+                    <input type="radio" name="lang" id="zh" value="zh" onclick="setLang('zh')">
+                    <label for="zh">🇨🇳 ZH</label>
+                </div>
+                <button class="toggle-btn" onclick="toggleExtraLangs()">+ More / Plus / Mehr</button>
+                <div class="checkbox-group" id="extra-languages">
+                    <input type="radio" name="lang" id="it" value="it" onclick="setLang('it')">
+                    <label for="it">🇮🇹 IT</label>
+                    <input type="radio" name="lang" id="de" value="de" onclick="setLang('de')">
+                    <label for="de">🇩🇪 DE</label>
+                    <input type="radio" name="lang" id="ja" value="ja" onclick="setLang('ja')">
+                    <label for="ja">🇯🇵 JA</label>
+                    <input type="radio" name="lang" id="da" value="da" onclick="setLang('da')">
+                    <label for="da">🇩🇰 DA</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="label-title">Scenario</span>
+                <div class="checkbox-group">
+                    <input type="radio" name="scen" id="christmas" value="christmas" checked onclick="setScenario('christmas')">
+                    <label for="christmas">🎅 Xmas</label>
+
+                    <input type="radio" name="scen" id="campus" value="campus" onclick="setScenario('campus')">
+                    <label for="campus">🏫 Campus</label>
+
+                    <input type="radio" name="scen" id="friends" value="friends" onclick="setScenario('friends')">
+                    <label for="friends">🍻 Friends</label>
+                    
+                    <input type="radio" name="scen" id="family" value="family" onclick="setScenario('family')">
+                    <label for="family">🏠 Family</label>
+
+                    <input type="radio" name="scen" id="personalize" value="personalize" onclick="setScenario('personalize')">
+                    <label for="personalize">✨ Personalize</label>
+                </div>
+            </div>
+
+            <div id="personalize-container">
+                <div class="input-row">
+                    <input type="text" id="personalize-prompt" placeholder="e.g. International students party...">
+                    <button id="generate-btn" onclick="generatePersonalizedDeck()">Go!</button>
+                </div>
+                <div id="gen-status"></div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="card truth-section" onclick="playTurn(this, 'truth')">
+                <div class="card-icon">😇</div>
+                <h2 class="card-title">Truth</h2>
+                <div class="prompt-content">
+                    <div class="prompt-text" id="truth-text">Tap for Truth</div>
+                </div>
+                <div class="click-instruction">Click to switch to next question</div>
+            </div>
+
+            <div class="card dare-section" onclick="playTurn(this, 'dare')">
+                <div class="card-icon">😈</div>
+                <h2 class="card-title">Dare</h2>
+                <div class="prompt-content">
+                    <div class="prompt-text" id="dare-text">Tap for Dare</div>
+                    <div id="dare-visual" class="dare-visual"></div>
+                </div>
+                <div class="click-instruction">Click to switch to next question</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 15 Questions per Category Data Store ---
+        const db = {
+            en: {
+                campus: {
+                    truth: ["Who is your campus crush?", "Lowest grade you ever got?", "Fallen asleep in class?", "Cheated on an exam?", "Stolen food from a roommate?", "Who is the weirdest professor?", "Skipped a whole day?", "Lied for an extension?", "Worst cafeteria meal?", "Who do you avoid?", "Wrong class walk-in?", "Embarrassing moment?", "Hooked up in dorm?", "Who studies least?", "Failed a class?"],
+                    dare: [{t:"Yell 'I love exams' out window.",i:"📢"}, {t:"Funny dance in hallway.",i:"💃"}, {t:"Text crush waving emoji.",i:"👋"}, {t:"Ask stranger for pencil.",i:"✏️"}, {t:"Sit on floor.",i:"🧘"}, {t:"British accent 2 turns.",i:"🇬🇧"}, {t:"Selfie to professor.",i:"🤳"}, {t:"Book on head.",i:"📚"}, {t:"Act like monkey.",i:"🐒"}, {t:"Draw on hand.",i:"✍️"}, {t:"Imitate teacher.",i:"👨‍🏫"}, {t:"Walk backwards.",i:"🔙"}, {t:"Sing anthem.",i:"🎤"}, {t:"Show last photo.",i:"📷"}, {t:"Call mom: 'I failed'.",i:"📞"}]
+                },
+                family: {
+                    truth: ["Favorite child?", "Secret from mom?", "Worst gift?", "Blamed sibling?", "Lied about location?", "Snuck out?", "Annoying relative?", "Lie to dad?", "Read diary?", "Grandma's cooking?", "Worst trouble?", "Faked sick?", "Dislike cousin?", "Hate tradition?", "Stolen money?"],
+                    dare: [{t:"Hug sibling 1 min.",i:"🫂"}, {t:"Sing Xmas song.",i:"🎶"}, {t:"Show last photo.",i:"📱"}, {t:"Do dishes.",i:"🍽️"}, {t:"Massage mom.",i:"💆"}, {t:"Act like baby.",i:"👶"}, {t:"Dad picks profile pic.",i:"🖼️"}, {t:"Dance with sibling.",i:"💃"}, {t:"Eat raw garlic.",i:"🧄"}, {t:"Say I love you.",i:"❤️"}, {t:"Crab walk.",i:"🦀"}, {t:"Funny face.",i:"🤪"}, {t:"Smell socks.",i:"🧦"}, {t:"Get tickled.",i:"🤣"}, {t:"Whisper only.",i:"🤫"}]
+                },
+                friends: {
+                    truth: ["Trust least?", "Regret?", "Lied to cancel?", "Stalked ex?", "Best dressed?", "Kissed friend's ex?", "Embarrassing habit?", "Funniest here?", "Peed in pool?", "Grossest thing?", "Worst driver?", "Stolen something?", "Date who here?", "Biggest fear?", "Last cried?"],
+                    dare: [{t:"Swap shirts left.",i:"👕"}, {t:"Group DM Insta.",i:"💬"}, {t:"10 pushups.",i:"💪"}, {t:"Accent 2 rounds.",i:"🗣️"}, {t:"Let someone style hair.",i:"💇"}, {t:"Hot sauce spoon.",i:"🌶️"}, {t:"Funny selfie.",i:"📸"}, {t:"Bark like dog.",i:"🐶"}, {t:"Drink mystery mix.",i:"🥤"}, {t:"Spin 10 times.",i:"😵"}, {t:"Draw on forehead.",i:"🖍️"}, {t:"Broom dance.",i:"🧹"}, {t:"Imitate someone.",i:"🤡"}, {t:"Ice cube hold.",i:"🧊"}, {t:"Read last text.",i:"📱"}]
+                },
+                christmas: {
+                    truth: ["Worst gift given?", "Re-gifted?", "Like fruitcake?", "Peaked at gifts?", "Worst cook?", "Believe in Santa?", "Knocked tree?", "Worst Xmas movie?", "Forgot gift?", "Who drinks too much?", "Best memory?", "Mistletoe kiss?", "Want for Xmas?", "Like eggnog?", "Broken ornament?"],
+                    dare: [{t:"Reindeer act.",i:"🦌"}, {t:"Eat cinnamon.",i:"🥄"}, {t:"Wear bow.",i:"🎀"}, {t:"Ho Ho Ho.",i:"🎅"}, {t:"Tinsel wrap.",i:"🎄"}, {t:"Opera Jingle Bells.",i:"🎤"}, {t:"Sit on lap.",i:"🪑"}, {t:"Elf act.",i:"🧝"}, {t:"Santa belly.",i:"🤰"}, {t:"Paper snowflake.",i:"❄️"}, {t:"Kiss neighbor.",i:"💋"}, {t:"Cookie no hands.",i:"🍪"}, {t:"Freeze snowman.",i:"⛄"}, {t:"Melting candle.",i:"🕯️"}, {t:"Unwrap air.",i:"🎁"}]
+                }
+            },
+            // Simplified copies for other langs for demo purposes
+            fr: { campus: { truth: ["Crush ?", "Note ?"], dare: [{t:"Crie.",i:"📢"}] }, family: { truth: ["Enfant préféré ?"], dare: [{t:"Câlin.",i:"🫂"}] }, friends: { truth: ["Regret ?"], dare: [{t:"Danse.",i:"💃"}] }, christmas: { truth: ["Pire cadeau ?"], dare: [{t:"Renne.",i:"🦌"}] } },
+            zh: { campus: { truth: ["暗恋对象？", "最低分？"], dare: [{t:"大喊。",i:"📢"}] }, family: { truth: ["最爱孩子？"], dare: [{t:"拥抱。",i:"🫂"}] }, friends: { truth: ["后悔？"], dare: [{t:"跳舞。",i:"💃"}] }, christmas: { truth: ["最差礼物？"], dare: [{t:"驯鹿。",i:"🦌"}] } },
+            es: { campus: { truth: ["¿Amor?", "¿Nota?"], dare: [{t:"Grita.",i:"📢"}] }, family: { truth: ["¿Hijo fav?"], dare: [{t:"Abrazo.",i:"🫂"}] }, friends: { truth: ["¿Arrepentimiento?"], dare: [{t:"Baila.",i:"💃"}] }, christmas: { truth: ["¿Regalo?", "¿Reno?"], dare: [{t:"Reno.",i:"🦌"}] } }
+        };
+
+        // Fill generic data for others
+        const generic = db.en; 
+        ['it', 'de', 'ja', 'da'].forEach(lang => db[lang] = generic);
+
+        // --- STATE ---
+        let currentLang = 'en';
+        let currentScenario = 'christmas';
+        let generatedDeck = { truth: [], dare: [] }; // Storage for personalized deck
+
+        // --- FUNCTIONS ---
+        function createSnow() {
+            const snowContainer = document.getElementById('snow-bg');
+            for (let i = 0; i < 40; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                snowflake.style.opacity = Math.random();
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        function triggerSnowBurst(x, y) {
+            for (let i = 0; i < 30; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'burst-flake';
+                flake.style.left = x + 'px';
+                flake.style.top = y + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 150 + 50;
+                flake.style.setProperty('--tx', Math.cos(angle) * velocity + 'px');
+                flake.style.setProperty('--ty', Math.sin(angle) * velocity + 'px');
+                flake.style.width = (Math.random() * 8 + 4) + 'px';
+                flake.style.height = flake.style.width;
+                document.body.appendChild(flake);
+                setTimeout(() => flake.remove(), 1000);
+            }
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            updateUIText();
+        }
+
+        function toggleExtraLangs() {
+            const extraDiv = document.getElementById('extra-languages');
+            const btn = document.querySelector('.toggle-btn');
+            if (extraDiv.style.display === 'flex') {
+                extraDiv.style.display = 'none'; btn.innerText = "+ More / Plus";
+            } else {
+                extraDiv.style.display = 'flex'; btn.innerText = "- Less";
+            }
+        }
+
+        function setScenario(scen) {
+            currentScenario = scen;
+            const inputContainer = document.getElementById('personalize-container');
+            inputContainer.style.display = (scen === 'personalize') ? 'block' : 'none';
+        }
+
+        // --- 1. PERSONALIZATION ENGINE (Simulated AI) ---
+        function generatePersonalizedDeck() {
+            const input = document.getElementById('personalize-prompt').value.toLowerCase();
+            const status = document.getElementById('gen-status');
+            
+            if(!input) {
+                status.innerText = "Please type a theme first! (e.g. Party, School)";
+                status.style.color = "#e74c3c";
+                return;
+            }
+
+            status.innerText = "Generating questions...";
+            status.style.color = "gold";
+
+            setTimeout(() => {
+                // Mix and Match Logic based on keywords
+                let mixTruth = [];
+                let mixDare = [];
+                const src = db.en; // Default to English source for mixing logic
+
+                // Keywords detection
+                if(input.includes("student") || input.includes("school") || input.includes("class")) {
+                    mixTruth.push(...src.campus.truth);
+                    mixDare.push(...src.campus.dare);
+                }
+                if(input.includes("party") || input.includes("drink") || input.includes("fun")) {
+                    mixTruth.push(...src.friends.truth);
+                    mixDare.push(...src.friends.dare);
+                }
+                if(input.includes("family") || input.includes("dinner") || input.includes("mom")) {
+                    mixTruth.push(...src.family.truth);
+                    mixDare.push(...src.family.dare);
+                }
+                if(input.includes("xmas") || input.includes("christmas")) {
+                    mixTruth.push(...src.christmas.truth);
+                    mixDare.push(...src.christmas.dare);
+                }
+
+                // Fallback if no specific keywords found, mix Friends + Campus
+                if(mixTruth.length === 0) {
+                    mixTruth.push(...src.friends.truth, ...src.campus.truth);
+                    mixDare.push(...src.friends.dare, ...src.campus.dare);
+                }
+
+                generatedDeck = { truth: mixTruth, dare: mixDare };
+                status.innerText = "Deck Generated! Tap cards to play.";
+                status.style.color = "#2ecc71";
+            }, 800); // Fake delay for "Processing"
+        }
+
+        function updateUIText() {
+            const uiText = {
+                en: { truth: "Truth", dare: "Dare", click: "Click for next question" },
+                fr: { truth: "Vérité", dare: "Action", click: "Cliquez pour suivante" },
+                zh: { truth: "真心话", dare: "大冒险", click: "点击下一个" },
+                es: { truth: "Verdad", dare: "Reto", click: "Siguiente" }
+            };
+            const txt = uiText[currentLang] || uiText.en;
+            document.querySelector('.truth-section .card-title').innerText = txt.truth;
+            document.querySelector('.dare-section .card-title').innerText = txt.dare;
+            document.querySelectorAll('.click-instruction').forEach(el => el.innerText = txt.click);
+        }
+
+        function playTurn(cardElement, type) {
+            triggerSnowBurst(cardElement.getBoundingClientRect().left + cardElement.offsetWidth/2, cardElement.getBoundingClientRect().top + cardElement.offsetHeight/2);
+
+            const textEl = document.getElementById(type + '-text');
+            const visualEl = document.getElementById('dare-visual');
+            textEl.classList.remove('fade-in');
+            if(type === 'dare') visualEl.style.display = 'none';
+
+            let text = "";
+            let icon = "";
+
+            // Logic to choose source
+            let sourceList = [];
+            
+            if (currentScenario === 'personalize') {
+                // Use generated deck
+                if(generatedDeck[type].length === 0) {
+                    text = "Please enter a theme and click 'Go' first!";
+                    icon = "⚠️";
+                } else {
+                    const items = generatedDeck[type];
+                    const randomItem = items[Math.floor(Math.random() * items.length)];
+                    if(type === 'truth') text = randomItem;
+                    else { text = randomItem.t; icon = randomItem.i; }
+                }
+            } else {
+                // Use standard DB
+                const items = db[currentLang][currentScenario][type];
+                const randomItem = items[Math.floor(Math.random() * items.length)];
+                if(type === 'truth') text = randomItem;
+                else { text = randomItem.t; icon = randomItem.i; }
+            }
+
+            setTimeout(() => {
+                textEl.innerText = text;
+                textEl.classList.add('fade-in');
+                if (type === 'dare' && icon) {
+                    visualEl.innerText = icon;
+                    visualEl.style.display = 'block';
+                    visualEl.style.animation = 'none';
+                    visualEl.offsetHeight; 
+                    visualEl.style.animation = 'popIn 0.5s';
+                }
+            }, 50);
+        }
+
+        createSnow();
+        updateUIText();
+    </script>
+</body>
+</html>
