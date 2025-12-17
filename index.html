@@ -22,76 +22,38 @@
             user-select: none;
         }
 
-        /* --- 1. Animations: Snow (Top Only), Deer, Tree --- */
-        
-        /* Snow confined to top 50vh */
+        /* --- Animations --- */
         .snow-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50vh; 
-            pointer-events: none;
-            z-index: 1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 50vh; 
+            pointer-events: none; z-index: 1;
             mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
             -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
         }
-
         .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            animation: fall linear infinite;
+            position: absolute; top: -10px; color: white; animation: fall linear infinite;
         }
-
-        /* Running Deer Animation */
         .deer-container {
-            position: fixed;
-            bottom: 15%; /* Run above the bottom cards slightly */
-            left: -100px;
-            font-size: 3rem;
-            z-index: 5;
-            pointer-events: none;
-            animation: runAcross 20s linear infinite;
+            position: fixed; bottom: 15%; left: -100px; font-size: 3rem; z-index: 5;
+            pointer-events: none; animation: runAcross 20s linear infinite;
         }
-
-        .deer-icon {
-            display: block;
-            animation: bob 0.5s infinite alternate; /* Bobbing head effect */
+        .deer-icon { display: block; animation: bob 0.5s infinite alternate; }
+        .xmas-tree {
+            position: fixed; bottom: 10px; right: 10px; font-size: 4rem; z-index: 20;
+            pointer-events: none; filter: drop-shadow(0 0 10px gold);
         }
-
         @keyframes runAcross {
-            0% { left: -100px; transform: scaleX(1); } /* Start left */
-            40% { left: 110vw; transform: scaleX(1); } /* Run to right */
-            40.01% { transform: scaleX(-1); } /* Flip direction instantly */
-            50% { left: 110vw; transform: scaleX(-1); } /* Wait off screen */
-            90% { left: -100px; transform: scaleX(-1); } /* Run back left */
+            0% { left: -100px; transform: scaleX(1); } 
+            40% { left: 110vw; transform: scaleX(1); }
+            40.01% { transform: scaleX(-1); }
+            50% { left: 110vw; transform: scaleX(-1); }
+            90% { left: -100px; transform: scaleX(-1); }
             100% { left: -100px; transform: scaleX(1); }
         }
-
         @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-
-        /* Fixed Christmas Tree */
-        .xmas-tree {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 4rem;
-            z-index: 20;
-            pointer-events: none;
-            filter: drop-shadow(0 0 10px gold);
-        }
-
         @keyframes fall { to { transform: translateY(60vh); } }
-
-        /* Burst Snow Animation */
         .burst-flake {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 999;
-            animation: burst 1s forwards;
+            position: absolute; background: white; border-radius: 50%;
+            pointer-events: none; z-index: 999; animation: burst 1s forwards;
         }
         @keyframes burst {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
@@ -100,54 +62,27 @@
 
         /* --- Layout --- */
         .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            position: relative;
-            z-index: 10;
+            display: flex; flex-direction: column; min-height: 100vh; position: relative; z-index: 10;
         }
-
-        /* --- Settings Panel --- */
         .settings-panel {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 15px;
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid #c0392b;
-            text-align: center;
-            max-height: 40vh;
-            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.85); padding: 15px; backdrop-filter: blur(8px);
+            border-bottom: 2px solid #c0392b; text-align: center; max-height: 40vh; overflow-y: auto;
         }
-
-        /* 2. Click title to reload */
         h1 { 
-            margin: 0 0 10px 0; 
-            font-family: 'Georgia', serif; 
-            letter-spacing: 2px; 
-            font-size: 1.5rem; 
-            cursor: pointer;
-            transition: color 0.3s;
+            margin: 0 0 10px 0; font-family: 'Georgia', serif; letter-spacing: 2px; font-size: 1.5rem; 
+            cursor: pointer; transition: color 0.3s;
         }
         h1:hover { color: gold; text-shadow: 0 0 10px gold; }
-
+        
         .control-group { margin-bottom: 12px; }
         .label-title { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.8rem; opacity: 0.8; text-transform: uppercase;}
 
         /* Styled Checkboxes */
-        .checkbox-group {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .checkbox-group { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .checkbox-group input[type="radio"] { display: none; }
         .checkbox-group label {
-            background: rgba(255,255,255,0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: 0.2s;
-            font-size: 0.8rem;
+            background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px;
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s; font-size: 0.8rem;
         }
         .checkbox-group input[type="radio"]:checked + label {
             background: #c0392b; border-color: #e74c3c; font-weight: bold; box-shadow: 0 0 8px #c0392b;
@@ -159,23 +94,10 @@
             padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; margin-top: 5px;
         }
 
-        /* Personalize Input Area */
-        #personalize-container {
-            display: none;
-            margin-top: 15px;
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 10px;
-        }
+        #personalize-container { display: none; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
         .input-row { display: flex; gap: 5px; justify-content: center; }
-        #personalize-prompt {
-            padding: 8px; border-radius: 5px; border: none; width: 70%;
-        }
-        #generate-btn {
-            padding: 8px 15px; background: gold; border: none; border-radius: 5px; 
-            color: #8b0000; font-weight: bold; cursor: pointer;
-        }
-        #generate-btn:hover { background: #fff; }
+        #personalize-prompt { padding: 8px; border-radius: 5px; border: none; width: 70%; }
+        #generate-btn { padding: 8px 15px; background: gold; border: none; border-radius: 5px; color: #8b0000; font-weight: bold; cursor: pointer; }
         #gen-status { font-size: 0.8rem; margin-top: 5px; color: #aaa; min-height: 1.2em; }
 
         /* --- Game Area --- */
@@ -187,34 +109,28 @@
         .card:active { transform: scale(0.98); }
         .truth-section { background: var(--truth-color); color: var(--truth-text); border-bottom: 4px solid gold; }
         .dare-section { background: var(--dare-color); color: var(--dare-text); border-top: 4px solid gold; }
-
         .card-icon { font-size: 2rem; margin-bottom: 5px; }
         .card-title { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: 0; }
         .prompt-content { margin-top: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 120px; }
         .prompt-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; max-width: 90%; word-wrap: break-word; line-height: 1.4; }
         .dare-visual { font-size: 5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); display: none; animation: popIn 0.5s; }
         .click-instruction { position: absolute; bottom: 10px; font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; animation: pulse 2s infinite; pointer-events: none;}
+        
+        .final-message { 
+            color: #27ae60; font-weight: 900; font-family: 'Georgia', serif; font-size: 1.6rem; 
+            text-shadow: 1px 1px 0px white; animation: popIn 0.8s;
+        }
 
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 0.8; } 100% { opacity: 0.4; } }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
         .fade-in { animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 600px) {
-            .card-title { font-size: 1.4rem; }
-            .prompt-text { font-size: 1.1rem; }
-            .dare-visual { font-size: 4rem; }
-        }
     </style>
 </head>
 <body>
 
     <div class="snow-container" id="snow-bg"></div>
-    
-    <div class="deer-container">
-        <div class="deer-icon">🦌</div>
-    </div>
-    
+    <div class="deer-container"><div class="deer-icon">🦌</div></div>
     <div class="xmas-tree">🎄</div>
 
     <div class="app-container">
@@ -252,16 +168,12 @@
                 <div class="checkbox-group">
                     <input type="radio" name="scen" id="christmas" value="christmas" checked onclick="setScenario('christmas')">
                     <label for="christmas">🎅 Xmas</label>
-
                     <input type="radio" name="scen" id="campus" value="campus" onclick="setScenario('campus')">
                     <label for="campus">🏫 Campus</label>
-
                     <input type="radio" name="scen" id="friends" value="friends" onclick="setScenario('friends')">
                     <label for="friends">🍻 Friends</label>
-                    
                     <input type="radio" name="scen" id="family" value="family" onclick="setScenario('family')">
                     <label for="family">🏠 Family</label>
-
                     <input type="radio" name="scen" id="personalize" value="personalize" onclick="setScenario('personalize')">
                     <label for="personalize">✨ Personalize</label>
                 </div>
@@ -299,42 +211,48 @@
     </div>
 
     <script>
-        // --- 15 Questions per Category Data Store ---
+        // --- DATA STORE ---
+        // Populated English, French, Chinese, Spanish fully. 
+        // Others map to English to ensure game doesn't break.
         const db = {
             en: {
-                campus: {
-                    truth: ["Who is your campus crush?", "Lowest grade you ever got?", "Fallen asleep in class?", "Cheated on an exam?", "Stolen food from a roommate?", "Who is the weirdest professor?", "Skipped a whole day?", "Lied for an extension?", "Worst cafeteria meal?", "Who do you avoid?", "Wrong class walk-in?", "Embarrassing moment?", "Hooked up in dorm?", "Who studies least?", "Failed a class?"],
-                    dare: [{t:"Yell 'I love exams' out window.",i:"📢"}, {t:"Funny dance in hallway.",i:"💃"}, {t:"Text crush waving emoji.",i:"👋"}, {t:"Ask stranger for pencil.",i:"✏️"}, {t:"Sit on floor.",i:"🧘"}, {t:"British accent 2 turns.",i:"🇬🇧"}, {t:"Selfie to professor.",i:"🤳"}, {t:"Book on head.",i:"📚"}, {t:"Act like monkey.",i:"🐒"}, {t:"Draw on hand.",i:"✍️"}, {t:"Imitate teacher.",i:"👨‍🏫"}, {t:"Walk backwards.",i:"🔙"}, {t:"Sing anthem.",i:"🎤"}, {t:"Show last photo.",i:"📷"}, {t:"Call mom: 'I failed'.",i:"📞"}]
-                },
-                family: {
-                    truth: ["Favorite child?", "Secret from mom?", "Worst gift?", "Blamed sibling?", "Lied about location?", "Snuck out?", "Annoying relative?", "Lie to dad?", "Read diary?", "Grandma's cooking?", "Worst trouble?", "Faked sick?", "Dislike cousin?", "Hate tradition?", "Stolen money?"],
-                    dare: [{t:"Hug sibling 1 min.",i:"🫂"}, {t:"Sing Xmas song.",i:"🎶"}, {t:"Show last photo.",i:"📱"}, {t:"Do dishes.",i:"🍽️"}, {t:"Massage mom.",i:"💆"}, {t:"Act like baby.",i:"👶"}, {t:"Dad picks profile pic.",i:"🖼️"}, {t:"Dance with sibling.",i:"💃"}, {t:"Eat raw garlic.",i:"🧄"}, {t:"Say I love you.",i:"❤️"}, {t:"Crab walk.",i:"🦀"}, {t:"Funny face.",i:"🤪"}, {t:"Smell socks.",i:"🧦"}, {t:"Get tickled.",i:"🤣"}, {t:"Whisper only.",i:"🤫"}]
-                },
-                friends: {
-                    truth: ["Trust least?", "Regret?", "Lied to cancel?", "Stalked ex?", "Best dressed?", "Kissed friend's ex?", "Embarrassing habit?", "Funniest here?", "Peed in pool?", "Grossest thing?", "Worst driver?", "Stolen something?", "Date who here?", "Biggest fear?", "Last cried?"],
-                    dare: [{t:"Swap shirts left.",i:"👕"}, {t:"Group DM Insta.",i:"💬"}, {t:"10 pushups.",i:"💪"}, {t:"Accent 2 rounds.",i:"🗣️"}, {t:"Let someone style hair.",i:"💇"}, {t:"Hot sauce spoon.",i:"🌶️"}, {t:"Funny selfie.",i:"📸"}, {t:"Bark like dog.",i:"🐶"}, {t:"Drink mystery mix.",i:"🥤"}, {t:"Spin 10 times.",i:"😵"}, {t:"Draw on forehead.",i:"🖍️"}, {t:"Broom dance.",i:"🧹"}, {t:"Imitate someone.",i:"🤡"}, {t:"Ice cube hold.",i:"🧊"}, {t:"Read last text.",i:"📱"}]
-                },
-                christmas: {
-                    truth: ["Worst gift given?", "Re-gifted?", "Like fruitcake?", "Peaked at gifts?", "Worst cook?", "Believe in Santa?", "Knocked tree?", "Worst Xmas movie?", "Forgot gift?", "Who drinks too much?", "Best memory?", "Mistletoe kiss?", "Want for Xmas?", "Like eggnog?", "Broken ornament?"],
-                    dare: [{t:"Reindeer act.",i:"🦌"}, {t:"Eat cinnamon.",i:"🥄"}, {t:"Wear bow.",i:"🎀"}, {t:"Ho Ho Ho.",i:"🎅"}, {t:"Tinsel wrap.",i:"🎄"}, {t:"Opera Jingle Bells.",i:"🎤"}, {t:"Sit on lap.",i:"🪑"}, {t:"Elf act.",i:"🧝"}, {t:"Santa belly.",i:"🤰"}, {t:"Paper snowflake.",i:"❄️"}, {t:"Kiss neighbor.",i:"💋"}, {t:"Cookie no hands.",i:"🍪"}, {t:"Freeze snowman.",i:"⛄"}, {t:"Melting candle.",i:"🕯️"}, {t:"Unwrap air.",i:"🎁"}]
-                }
+                campus: { truth: ["Who is your campus crush?", "Lowest grade ever?", "Fallen asleep in class?", "Cheated on an exam?", "Stolen food from roommate?", "Weirdest professor?", "Skipped whole day?", "Lied for extension?", "Worst cafeteria meal?", "Who do you avoid?", "Wrong class walk-in?", "Embarrassing moment?", "Hooked up in dorm?", "Who studies least?", "Failed a class?"], dare: [{t:"Yell 'I love exams'.",i:"📢"}, {t:"Funny dance hallway.",i:"💃"}, {t:"Text crush emoji.",i:"👋"}, {t:"Ask stranger pencil.",i:"✏️"}, {t:"Sit on floor.",i:"🧘"}, {t:"British accent.",i:"🇬🇧"}, {t:"Selfie to prof.",i:"🤳"}, {t:"Book on head.",i:"📚"}, {t:"Act like monkey.",i:"🐒"}, {t:"Draw on hand.",i:"✍️"}, {t:"Imitate teacher.",i:"👨‍🏫"}, {t:"Walk backwards.",i:"🔙"}, {t:"Sing anthem.",i:"🎤"}, {t:"Show last photo.",i:"📷"}, {t:"Call mom: 'Failed'.",i:"📞"}] },
+                family: { truth: ["Favorite child?", "Secret from mom?", "Worst gift?", "Blamed sibling?", "Lied about location?", "Snuck out?", "Annoying relative?", "Lie to dad?", "Read diary?", "Grandma's cooking?", "Worst trouble?", "Faked sick?", "Dislike cousin?", "Hate tradition?", "Stolen money?"], dare: [{t:"Hug sibling.",i:"🫂"}, {t:"Sing Xmas song.",i:"🎶"}, {t:"Show last photo.",i:"📱"}, {t:"Do dishes.",i:"🍽️"}, {t:"Massage mom.",i:"💆"}, {t:"Act like baby.",i:"👶"}, {t:"Dad picks pic.",i:"🖼️"}, {t:"Dance sibling.",i:"💃"}, {t:"Eat raw garlic.",i:"🧄"}, {t:"Say I love you.",i:"❤️"}, {t:"Crab walk.",i:"🦀"}, {t:"Funny face.",i:"🤪"}, {t:"Smell socks.",i:"🧦"}, {t:"Get tickled.",i:"🤣"}, {t:"Whisper only.",i:"🤫"}] },
+                friends: { truth: ["Trust least?", "Regret?", "Lied to cancel?", "Stalked ex?", "Best dressed?", "Kissed friend's ex?", "Embarrassing habit?", "Funniest here?", "Peed in pool?", "Grossest thing?", "Worst driver?", "Stolen something?", "Date who here?", "Biggest fear?", "Last cried?"], dare: [{t:"Swap shirts left.",i:"👕"}, {t:"Group DM Insta.",i:"💬"}, {t:"10 pushups.",i:"💪"}, {t:"Accent 2 rounds.",i:"🗣️"}, {t:"Style hair.",i:"💇"}, {t:"Hot sauce spoon.",i:"🌶️"}, {t:"Funny selfie.",i:"📸"}, {t:"Bark like dog.",i:"🐶"}, {t:"Drink mystery mix.",i:"🥤"}, {t:"Spin 10 times.",i:"😵"}, {t:"Draw forehead.",i:"🖍️"}, {t:"Broom dance.",i:"🧹"}, {t:"Imitate someone.",i:"🤡"}, {t:"Ice cube hold.",i:"🧊"}, {t:"Read last text.",i:"📱"}] },
+                christmas: { truth: ["Worst gift given?", "Re-gifted?", "Like fruitcake?", "Peaked at gifts?", "Worst cook?", "Believe in Santa?", "Knocked tree?", "Worst Xmas movie?", "Forgot gift?", "Who drinks too much?", "Best memory?", "Mistletoe kiss?", "Want for Xmas?", "Like eggnog?", "Broken ornament?"], dare: [{t:"Reindeer act.",i:"🦌"}, {t:"Eat cinnamon.",i:"🥄"}, {t:"Wear bow.",i:"🎀"}, {t:"Ho Ho Ho.",i:"🎅"}, {t:"Tinsel wrap.",i:"🎄"}, {t:"Opera Jingle Bells.",i:"🎤"}, {t:"Sit on lap.",i:"🪑"}, {t:"Elf act.",i:"🧝"}, {t:"Santa belly.",i:"🤰"}, {t:"Paper snowflake.",i:"❄️"}, {t:"Kiss neighbor.",i:"💋"}, {t:"Cookie no hands.",i:"🍪"}, {t:"Freeze snowman.",i:"⛄"}, {t:"Melting candle.",i:"🕯️"}, {t:"Unwrap air.",i:"🎁"}] }
             },
-            // Simplified copies for other langs for demo purposes
-            fr: { campus: { truth: ["Crush ?", "Note ?"], dare: [{t:"Crie.",i:"📢"}] }, family: { truth: ["Enfant préféré ?"], dare: [{t:"Câlin.",i:"🫂"}] }, friends: { truth: ["Regret ?"], dare: [{t:"Danse.",i:"💃"}] }, christmas: { truth: ["Pire cadeau ?"], dare: [{t:"Renne.",i:"🦌"}] } },
-            zh: { campus: { truth: ["暗恋对象？", "最低分？"], dare: [{t:"大喊。",i:"📢"}] }, family: { truth: ["最爱孩子？"], dare: [{t:"拥抱。",i:"🫂"}] }, friends: { truth: ["后悔？"], dare: [{t:"跳舞。",i:"💃"}] }, christmas: { truth: ["最差礼物？"], dare: [{t:"驯鹿。",i:"🦌"}] } },
-            es: { campus: { truth: ["¿Amor?", "¿Nota?"], dare: [{t:"Grita.",i:"📢"}] }, family: { truth: ["¿Hijo fav?"], dare: [{t:"Abrazo.",i:"🫂"}] }, friends: { truth: ["¿Arrepentimiento?"], dare: [{t:"Baila.",i:"💃"}] }, christmas: { truth: ["¿Regalo?", "¿Reno?"], dare: [{t:"Reno.",i:"🦌"}] } }
+            fr: {
+                campus: { truth: ["Crush sur le campus ?", "Pire note ?", "Dormi en classe ?", "Triché exam ?", "Volé nourriture ?", "Prof bizarre ?", "Séché un jour ?", "Menti délai ?", "Pire repas ?", "Qui évites-tu ?", "Trompé salle ?", "Moment gênant ?", "Dormi dortoir ?", "Qui bosse pas ?", "Raté cours ?"], dare: [{t:"Crie 'J'aime exams'.",i:"📢"}, {t:"Danse couloir.",i:"💃"}, {t:"SMS crush emoji.",i:"👋"}, {t:"Demande crayon.",i:"✏️"}, {t:"Assieds-toi sol.",i:"🧘"}, {t:"Accent anglais.",i:"🇬🇧"}, {t:"Selfie prof.",i:"🤳"}, {t:"Livre sur tête.",i:"📚"}, {t:"Fais le singe.",i:"🐒"}, {t:"Dessine main.",i:"✍️"}, {t:"Imite prof.",i:"👨‍🏫"}, {t:"Marche reculons.",i:"🔙"}, {t:"Chante hymne.",i:"🎤"}, {t:"Montre photo.",i:"📷"}, {t:"Appelle maman.",i:"📞"}] },
+                family: { truth: ["Enfant préféré ?", "Secret maman ?", "Pire cadeau ?", "Accusé frère ?", "Menti lieu ?", "Muré ?", "Parent chiant ?", "Menti papa ?", "Lu journal ?", "Cuisine mamie ?", "Pire bêtise ?", "Faux malade ?", "Cousin nul ?", "Tradition nulle ?", "Volé argent ?"], dare: [{t:"Câlin frère.",i:"🫂"}, {t:"Chante Noël.",i:"🎶"}, {t:"Montre photo.",i:"📱"}, {t:"Fais vaisselle.",i:"🍽️"}, {t:"Massage maman.",i:"💆"}, {t:"Fais bébé.",i:"👶"}, {t:"Papa choisit photo.",i:"🖼️"}, {t:"Danse famille.",i:"💃"}, {t:"Mange ail.",i:"🧄"}, {t:"Dis je t'aime.",i:"❤️"}, {t:"Marche crabe.",i:"🦀"}, {t:"Grimace.",i:"🤪"}, {t:"Sent chaussette.",i:"🧦"}, {t:"Guili-guili.",i:"🤣"}, {t:"Chuchote.",i:"🤫"}] },
+                friends: { truth: ["Confiance ?", "Regret ?", "Menti plan ?", "Stalké ex ?", "Mieux habillé ?", "Embrassé ex ?", "Habitude ?", "Le plus drôle ?", "Pipi piscine ?", "Dégoûtant ?", "Pire chauffeur ?", "Volé ?", "Date qui ?", "Peur ?", "Pleuré ?"], dare: [{t:"Échange t-shirt.",i:"👕"}, {t:"DM groupe.",i:"💬"}, {t:"10 pompes.",i:"💪"}, {t:"Accent.",i:"🗣️"}, {t:"Coiffure.",i:"💇"}, {t:"Mange piment.",i:"🌶️"}, {t:"Selfie drôle.",i:"📸"}, {t:"Abbaie.",i:"🐶"}, {t:"Bois mystère.",i:"🥤"}, {t:"Tourne 10x.",i:"😵"}, {t:"Dessin front.",i:"🖍️"}, {t:"Danse balais.",i:"🧹"}, {t:"Imite ami.",i:"🤡"}, {t:"Glaçon main.",i:"🧊"}, {t:"Lis SMS.",i:"📱"}] },
+                christmas: { truth: ["Pire cadeau ?", "Recyclé ?", "Aimes fruitcake ?", "Vu cadeaux ?", "Pire cuistot ?", "Père Noël ?", "Renversé sapin ?", "Pire film ?", "Oublié cadeau ?", "Boit trop ?", "Souvenir ?", "Gui ?", "Veux quoi ?", "Lait poule ?", "Cassé boule ?"], dare: [{t:"Fais renne.",i:"🦌"}, {t:"Mange cannelle.",i:"🥄"}, {t:"Nœud tête.",i:"🎀"}, {t:"Ho Ho Ho.",i:"🎅"}, {t:"Guirlande.",i:"🎄"}, {t:"Chante opéra.",i:"🎤"}, {t:"Assieds genoux.",i:"🪑"}, {t:"Fais l'elfe.",i:"🧝"}, {t:"Ventre Noël.",i:"🤰"}, {t:"Flocon papier.",i:"❄️"}, {t:"Bisou voisin.",i:"💋"}, {t:"Biscuit sans main.",i:"🍪"}, {t:"Statue neige.",i:"⛄"}, {t:"Bougie.",i:"🕯️"}, {t:"Ouvre air.",i:"🎁"}] }
+            },
+            zh: {
+                campus: { truth: ["暗恋谁？", "最低分？", "睡过头？", "作弊？", "偷吃？", "怪教授？", "翘课？", "撒谎？", "难吃食堂？", "躲谁？", "走错路？", "尴尬？", "宿舍过夜？", "不学习？", "挂科？"], dare: [{t:"喊爱考试。",i:"📢"}, {t:"跳舞。",i:"💃"}, {t:"发表情。",i:"👋"}, {t:"借笔。",i:"✏️"}, {t:"坐地上。",i:"🧘"}, {t:"口音。",i:"🇬🇧"}, {t:"自拍教授。",i:"🤳"}, {t:"顶书。",i:"📚"}, {t:"学猴子。",i:"🐒"}, {t:"画手。",i:"✍️"}, {t:"模仿老师。",i:"👨‍🏫"}, {t:"倒走。",i:"🔙"}, {t:"唱国歌。",i:"🎤"}, {t:"看照片。",i:"📷"}, {t:"打电话哭。",i:"📞"}] },
+                family: { truth: ["最爱孩子？", "秘密？", "烂礼物？", "嫁祸？", "骗去向？", "溜走？", "烦亲戚？", "骗爸爸？", "看日记？", "奶奶菜？", "大麻烦？", "装病？", "讨厌谁？", "烂传统？", "偷钱？"], dare: [{t:"拥抱。",i:"🫂"}, {t:"唱圣诞歌。",i:"🎶"}, {t:"看照片。",i:"📱"}, {t:"洗碗。",i:"🍽️"}, {t:"按摩。",i:"💆"}, {t:"学婴儿。",i:"👶"}, {t:"爸选头像。",i:"🖼️"}, {t:"跳舞。",i:"💃"}, {t:"吃蒜。",i:"🧄"}, {t:"说爱你。",i:"❤️"}, {t:"螃蟹步。",i:"🦀"}, {t:"鬼脸。",i:"🤪"}, {t:"闻袜子。",i:"🧦"}, {t:"挠痒。",i:"🤣"}, {t:"耳语。",i:"🤫"}] },
+                friends: { truth: ["不信谁？", "后悔？", "鸽子？", "视奸？", "时尚？", "亲前任？", "习惯？", "搞笑？", "尿床？", "恶心？", "烂司机？", "偷东西？", "约谁？", "恐惧？", "哭？"], dare: [{t:"换衣。",i:"👕"}, {t:"群发。",i:"💬"}, {t:"俯卧撑。",i:"💪"}, {t:"口音。",i:"🗣️"}, {t:"做发型。",i:"💇"}, {t:"吃辣。",i:"🌶️"}, {t:"丑照。",i:"📸"}, {t:"狗叫。",i:"🐶"}, {t:"喝混合。",i:"🥤"}, {t:"转圈。",i:"😵"}, {t:"画头。",i:"🖍️"}, {t:"扫把舞。",i:"🧹"}, {t:"模仿。",i:"🤡"}, {t:"拿冰。",i:"🧊"}, {t:"读短信。",i:"📱"}] },
+                christmas: { truth: ["烂礼物？", "转送？", "水果蛋糕？", "偷看？", "烂厨师？", "圣诞老人？", "倒树？", "烂电影？", "忘礼物？", "喝多？", "回忆？", "槲寄生？", "想要啥？", "蛋酒？", "碎装饰？"], dare: [{t:"驯鹿。",i:"🦌"}, {t:"吃桂皮。",i:"🥄"}, {t:"戴结。",i:"🎀"}, {t:"HoHoHo。",i:"🎅"}, {t:"彩带。",i:"🎄"}, {t:"歌剧。",i:"🎤"}, {t:"坐腿。",i:"🪑"}, {t:"精灵。",i:"🧝"}, {t:"大肚。",i:"🤰"}, {t:"剪纸。",i:"❄️"}, {t:"亲人。",i:"💋"}, {t:"吃饼干。",i:"🍪"}, {t:"雪人。",i:"⛄"}, {t:"蜡烛。",i:"🕯️"}, {t:"拆礼物。",i:"🎁"}] }
+            },
+            es: {
+                campus: { truth: ["¿Amor?", "¿Peor nota?", "¿Dormido?", "¿Copiado?", "¿Robado comida?", "¿Profe raro?", "¿Faltado?", "¿Mentido?", "¿Comida mala?", "¿Evitas?", "¿Clase mal?", "¿Vergüenza?", "¿Dormitorio?", "¿Vago?", "¿Suspendido?"], dare: [{t:"Grita amor.",i:"📢"}, {t:"Baila.",i:"💃"}, {t:"Emoji crush.",i:"👋"}, {t:"Pide lápiz.",i:"✏️"}, {t:"Suelo.",i:"🧘"}, {t:"Acento.",i:"🇬🇧"}, {t:"Selfie profe.",i:"🤳"}, {t:"Libro cabeza.",i:"📚"}, {t:"Mono.",i:"🐒"}, {t:"Dibuja mano.",i:"✍️"}, {t:"Imita profe.",i:"👨‍🏫"}, {t:"Camina atrás.",i:"🔙"}, {t:"Himno.",i:"🎤"}, {t:"Foto.",i:"📷"}, {t:"Llama mamá.",i:"📞"}] },
+                family: { truth: ["¿Hijo fav?", "¿Secreto?", "¿Regalo mal?", "¿Culpado?", "¿Mentido?", "¿Escapado?", "¿Pariente?", "¿Mentira papá?", "¿Diario?", "¿Cocina?", "¿Lío?", "¿Falso enfermo?", "¿Primo?", "¿Tradición?", "¿Dinero?"], dare: [{t:"Abrazo.",i:"🫂"}, {t:"Canta.",i:"🎶"}, {t:"Foto.",i:"📱"}, {t:"Platos.",i:"🍽️"}, {t:"Masaje.",i:"💆"}, {t:"Bebé.",i:"👶"}, {t:"Perfil.",i:"🖼️"}, {t:"Baila.",i:"💃"}, {t:"Ajo.",i:"🧄"}, {t:"Te quiero.",i:"❤️"}, {t:"Cangrejo.",i:"🦀"}, {t:"Mueca.",i:"🤪"}, {t:"Calcetín.",i:"🧦"}, {t:"Cosquillas.",i:"🤣"}, {t:"Susurro.",i:"🤫"}] },
+                friends: { truth: ["¿Confianza?", "¿Arrepentimiento?", "¿Plan?", "¿Stalk?", "¿Vestido?", "¿Ex amigo?", "¿Hábito?", "¿Gracioso?", "¿Piscina?", "¿Asco?", "¿Conductor?", "¿Robado?", "¿Cita?", "¿Miedo?", "¿Llanto?"], dare: [{t:"Camisa.",i:"👕"}, {t:"DM.",i:"💬"}, {t:"Flexiones.",i:"💪"}, {t:"Acento.",i:"🗣️"}, {t:"Pelo.",i:"💇"}, {t:"Picante.",i:"🌶️"}, {t:"Selfie.",i:"📸"}, {t:"Perro.",i:"🐶"}, {t:"Bebida.",i:"🥤"}, {t:"Gira.",i:"😵"}, {t:"Frente.",i:"🖍️"}, {t:"Escoba.",i:"🧹"}, {t:"Imita.",i:"🤡"}, {t:"Hielo.",i:"🧊"}, {t:"SMS.",i:"📱"}] },
+                christmas: { truth: ["¿Regalo mal?", "¿Reciclado?", "¿Pastel?", "¿Mirado?", "¿Cocinero?", "¿Santa?", "¿Árbol?", "¿Peli?", "¿Olvidado?", "¿Bebida?", "¿Recuerdo?", "¿Muérdago?", "¿Deseo?", "¿Rompope?", "¿Roto?"], dare: [{t:"Reno.",i:"🦌"}, {t:"Canela.",i:"🥄"}, {t:"Lazo.",i:"🎀"}, {t:"HoHoHo.",i:"🎅"}, {t:"Cinta.",i:"🎄"}, {t:"Ópera.",i:"🎤"}, {t:"Piernas.",i:"🪑"}, {t:"Elfo.",i:"🧝"}, {t:"Barriga.",i:"🤰"}, {t:"Copo.",i:"❄️"}, {t:"Beso.",i:"💋"}, {t:"Galleta.",i:"🍪"}, {t:"Nieve.",i:"⛄"}, {t:"Vela.",i:"🕯️"}, {t:"Regalo.",i:"🎁"}] }
+            }
         };
 
-        // Fill generic data for others
-        const generic = db.en; 
-        ['it', 'de', 'ja', 'da'].forEach(lang => db[lang] = generic);
+        // Fallback for extra languages (using English data to prevent crashes)
+        const fallback = db.en;
+        ['it', 'de', 'ja', 'da'].forEach(lang => db[lang] = fallback);
 
-        // --- STATE ---
+        // --- STATE & TRACKING ---
         let currentLang = 'en';
         let currentScenario = 'christmas';
-        let generatedDeck = { truth: [], dare: [] }; // Storage for personalized deck
+        let generatedDeck = { truth: [], dare: [] };
+        
+        // Track seen questions: { truth: Set(indices), dare: Set(indices) }
+        let seenIndices = { truth: new Set(), dare: new Set() };
 
-        // --- FUNCTIONS ---
         function createSnow() {
             const snowContainer = document.getElementById('snow-bg');
             for (let i = 0; i < 40; i++) {
@@ -366,8 +284,14 @@
             }
         }
 
+        function resetTracker() {
+            seenIndices = { truth: new Set(), dare: new Set() };
+            // Optional: visual cue that deck reset
+        }
+
         function setLang(lang) {
             currentLang = lang;
+            resetTracker(); // Reset questions when changing language
             updateUIText();
         }
 
@@ -383,58 +307,53 @@
 
         function setScenario(scen) {
             currentScenario = scen;
+            resetTracker(); // Reset questions when changing scenario
             const inputContainer = document.getElementById('personalize-container');
             inputContainer.style.display = (scen === 'personalize') ? 'block' : 'none';
         }
 
-        // --- 1. PERSONALIZATION ENGINE (Simulated AI) ---
         function generatePersonalizedDeck() {
             const input = document.getElementById('personalize-prompt').value.toLowerCase();
             const status = document.getElementById('gen-status');
             
             if(!input) {
-                status.innerText = "Please type a theme first! (e.g. Party, School)";
+                status.innerText = "Please type a theme first!";
                 status.style.color = "#e74c3c";
                 return;
             }
-
-            status.innerText = "Generating questions...";
+            status.innerText = "Generating...";
             status.style.color = "gold";
-
             setTimeout(() => {
-                // Mix and Match Logic based on keywords
                 let mixTruth = [];
                 let mixDare = [];
-                const src = db.en; // Default to English source for mixing logic
+                // Use English source for keyword matching logic logic, or current lang if robust
+                // For simplicity in this demo, we pull from current lang if available, else EN
+                const src = db[currentLang] || db.en; 
 
-                // Keywords detection
+                // Simple keyword mixer
                 if(input.includes("student") || input.includes("school") || input.includes("class")) {
-                    mixTruth.push(...src.campus.truth);
-                    mixDare.push(...src.campus.dare);
+                    mixTruth.push(...src.campus.truth); mixDare.push(...src.campus.dare);
                 }
-                if(input.includes("party") || input.includes("drink") || input.includes("fun")) {
-                    mixTruth.push(...src.friends.truth);
-                    mixDare.push(...src.friends.dare);
+                if(input.includes("party") || input.includes("drink")) {
+                    mixTruth.push(...src.friends.truth); mixDare.push(...src.friends.dare);
                 }
-                if(input.includes("family") || input.includes("dinner") || input.includes("mom")) {
-                    mixTruth.push(...src.family.truth);
-                    mixDare.push(...src.family.dare);
+                if(input.includes("family")) {
+                    mixTruth.push(...src.family.truth); mixDare.push(...src.family.dare);
                 }
                 if(input.includes("xmas") || input.includes("christmas")) {
-                    mixTruth.push(...src.christmas.truth);
-                    mixDare.push(...src.christmas.dare);
+                    mixTruth.push(...src.christmas.truth); mixDare.push(...src.christmas.dare);
                 }
-
-                // Fallback if no specific keywords found, mix Friends + Campus
+                // Fallback
                 if(mixTruth.length === 0) {
                     mixTruth.push(...src.friends.truth, ...src.campus.truth);
                     mixDare.push(...src.friends.dare, ...src.campus.dare);
                 }
 
                 generatedDeck = { truth: mixTruth, dare: mixDare };
-                status.innerText = "Deck Generated! Tap cards to play.";
+                resetTracker(); // Reset for new deck
+                status.innerText = "Deck Ready!";
                 status.style.color = "#2ecc71";
-            }, 800); // Fake delay for "Processing"
+            }, 500);
         }
 
         function updateUIText() {
@@ -442,7 +361,11 @@
                 en: { truth: "Truth", dare: "Dare", click: "Click for next question" },
                 fr: { truth: "Vérité", dare: "Action", click: "Cliquez pour suivante" },
                 zh: { truth: "真心话", dare: "大冒险", click: "点击下一个" },
-                es: { truth: "Verdad", dare: "Reto", click: "Siguiente" }
+                es: { truth: "Verdad", dare: "Reto", click: "Siguiente" },
+                it: { truth: "Verità", dare: "Obbligo", click: "Clicca" },
+                de: { truth: "Wahrheit", dare: "Pflicht", click: "Klicken" },
+                ja: { truth: "真実", dare: "挑戦", click: "クリック" },
+                da: { truth: "Sandhed", dare: "Konsekvens", click: "Klik" }
             };
             const txt = uiText[currentLang] || uiText.en;
             document.querySelector('.truth-section .card-title').innerText = txt.truth;
@@ -456,31 +379,51 @@
             const textEl = document.getElementById(type + '-text');
             const visualEl = document.getElementById('dare-visual');
             textEl.classList.remove('fade-in');
+            textEl.classList.remove('final-message');
             if(type === 'dare') visualEl.style.display = 'none';
 
+            let itemList = [];
+            
+            // 1. Determine List Source
+            if (currentScenario === 'personalize') {
+                itemList = generatedDeck[type];
+                if(itemList.length === 0) {
+                    textEl.innerText = "Please generate deck first!";
+                    textEl.classList.add('fade-in');
+                    return;
+                }
+            } else {
+                // Safely get data. Fallback to EN if language key missing in sub-object
+                const langData = db[currentLang] || db.en;
+                itemList = langData[currentScenario][type];
+            }
+
+            // 2. Filter out already seen indices
+            // We map the original list to [0, 1, 2...] then filter out those in the Set
+            let availableIndices = itemList.map((_, i) => i).filter(i => !seenIndices[type].has(i));
+
+            // 3. Check if empty
+            if (availableIndices.length === 0) {
+                setTimeout(() => {
+                    textEl.innerHTML = "🎄 Merry Christmas<br>& Happy New Year! 🎆";
+                    textEl.classList.add('final-message');
+                }, 50);
+                return;
+            }
+
+            // 4. Pick Random from Available
+            const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            seenIndices[type].add(randomIndex); // Mark as seen
+
+            const selectedItem = itemList[randomIndex];
             let text = "";
             let icon = "";
 
-            // Logic to choose source
-            let sourceList = [];
-            
-            if (currentScenario === 'personalize') {
-                // Use generated deck
-                if(generatedDeck[type].length === 0) {
-                    text = "Please enter a theme and click 'Go' first!";
-                    icon = "⚠️";
-                } else {
-                    const items = generatedDeck[type];
-                    const randomItem = items[Math.floor(Math.random() * items.length)];
-                    if(type === 'truth') text = randomItem;
-                    else { text = randomItem.t; icon = randomItem.i; }
-                }
+            if(type === 'truth') {
+                text = selectedItem;
             } else {
-                // Use standard DB
-                const items = db[currentLang][currentScenario][type];
-                const randomItem = items[Math.floor(Math.random() * items.length)];
-                if(type === 'truth') text = randomItem;
-                else { text = randomItem.t; icon = randomItem.i; }
+                text = selectedItem.t;
+                icon = selectedItem.i;
             }
 
             setTimeout(() => {
