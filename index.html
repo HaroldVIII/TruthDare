@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Festive Truth or Dare</title>
     <style>
         :root {
@@ -10,28 +10,53 @@
             --truth-text: #b8860b;
             --dare-color: #8b0000;
             --dare-text: #ffffff;
-            --bg-christmas: #0f2c1f;
+            --bg-christmas: #0f2c1f; /* Deep green for header */
+            --bg-body: #05140e; /* Darker background for main body */
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-christmas);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
             overflow-x: hidden;
             color: white;
-            user-select: none;
+            /* Prevents double-tap zoom on iOS */
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- Layout Structure --- */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* New Top Header Container for Snow Background */
+        .top-header-container {
+            position: relative;
+            background-color: var(--bg-christmas);
+            overflow: hidden; /* Contains the snow */
+            border-bottom: 3px solid gold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
         /* --- Animations --- */
+        /* Snow confined to the header container */
         .snow-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 50vh; 
-            pointer-events: none; z-index: 1;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
+
         .snowflake {
             position: absolute; top: -10px; color: white; animation: fall linear infinite;
         }
+        
+        /* Fixed animations remain outside flow */
         .deer-container {
             position: fixed; bottom: 15%; left: -100px; font-size: 3rem; z-index: 5;
             pointer-events: none; animation: runAcross 20s linear infinite;
@@ -41,6 +66,7 @@
             position: fixed; bottom: 10px; right: 10px; font-size: 4rem; z-index: 20;
             pointer-events: none; filter: drop-shadow(0 0 10px gold);
         }
+        
         @keyframes runAcross {
             0% { left: -100px; transform: scaleX(1); } 
             40% { left: 110vw; transform: scaleX(1); }
@@ -50,7 +76,7 @@
             100% { left: -100px; transform: scaleX(1); }
         }
         @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-        @keyframes fall { to { transform: translateY(60vh); } }
+        @keyframes fall { to { transform: translateY(110%); } } /* Fall just past bottom of header */
         .burst-flake {
             position: absolute; background: white; border-radius: 50%;
             pointer-events: none; z-index: 999; animation: burst 1s forwards;
@@ -60,133 +86,165 @@
             100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
 
-        /* --- Layout --- */
-        .app-container {
-            display: flex; flex-direction: column; min-height: 100vh; position: relative; z-index: 10;
-        }
+        /* --- Settings Panel Content --- */
         .settings-panel {
-            background: rgba(0, 0, 0, 0.85); padding: 15px; backdrop-filter: blur(8px);
-            border-bottom: 2px solid #c0392b; text-align: center; max-height: 40vh; overflow-y: auto;
+            /* Removed background color here, it's now provided by header container */
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            z-index: 2; /* Ensures controls are above snow */
         }
-        h1 { 
-            margin: 0 0 10px 0; font-family: 'Georgia', serif; letter-spacing: 2px; font-size: 1.5rem; 
-            cursor: pointer; transition: color 0.3s;
-        }
-        h1:hover { color: gold; text-shadow: 0 0 10px gold; }
         
-        .control-group { margin-bottom: 12px; }
-        .label-title { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.8rem; opacity: 0.8; text-transform: uppercase;}
+        /* Updated Title Color */
+        h1 { 
+            margin: 0 0 15px 0; 
+            font-family: 'Georgia', serif; 
+            letter-spacing: 1px; 
+            font-size: 1.8rem; 
+            cursor: pointer; 
+            color: gold; /* Changed to Gold for contrast */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        
+        .control-group { margin-bottom: 15px; }
+        .label-title { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;}
 
-        /* Styled Checkboxes */
-        .checkbox-group { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        /* Styled Checkboxes - Optimized for touch */
+        .checkbox-group { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .checkbox-group input[type="radio"] { display: none; }
         .checkbox-group label {
-            background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.3); transition: 0.2s; font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.3); /* Darker semi-transparent bg */
+            padding: 8px 14px; /* Larger touch target */
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.2s;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
         .checkbox-group input[type="radio"]:checked + label {
-            background: #c0392b; border-color: #e74c3c; font-weight: bold; box-shadow: 0 0 8px #c0392b;
+            background: #c0392b; border-color: gold; font-weight: bold; box-shadow: 0 0 8px #c0392b; color: white;
         }
 
-        #extra-languages { display: none; margin-top: 10px; animation: fadeIn 0.3s; }
+        #extra-languages { display: none; margin-top: 12px; animation: fadeIn 0.3s; }
         .toggle-btn {
             background: none; border: 1px dashed rgba(255,255,255,0.4); color: #ddd;
-            padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; margin-top: 5px;
+            padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.75rem; margin-top: 8px;
         }
 
-        #personalize-container { display: none; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
-        .input-row { display: flex; gap: 5px; justify-content: center; }
-        #personalize-prompt { padding: 8px; border-radius: 5px; border: none; width: 70%; }
-        #generate-btn { padding: 8px 15px; background: gold; border: none; border-radius: 5px; color: #8b0000; font-weight: bold; cursor: pointer; }
-        #gen-status { font-size: 0.8rem; margin-top: 5px; color: #aaa; min-height: 1.2em; }
+        #personalize-container { display: none; margin-top: 15px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; }
+        .input-row { display: flex; gap: 8px; justify-content: center; }
+        #personalize-prompt { padding: 10px; border-radius: 5px; border: none; width: 65%; font-size: 1rem;}
+        #generate-btn { padding: 10px 18px; background: gold; border: none; border-radius: 5px; color: #8b0000; font-weight: bold; cursor: pointer; font-size: 1rem;}
+        #gen-status { font-size: 0.8rem; margin-top: 8px; color: #ddd; min-height: 1.2em; }
 
         /* --- Game Area --- */
         .game-area { flex-grow: 1; display: flex; flex-direction: column; }
         .card {
             flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 15px; text-align: center; cursor: pointer; position: relative; overflow: hidden; min-height: 250px;
+            padding: 20px; text-align: center; cursor: pointer; position: relative; overflow: hidden; 
+            min-height: 220px; /* Slightly reduced min-height */
         }
-        .card:active { transform: scale(0.98); }
+        .card:active { transform: scale(0.98); transition: transform 0.1s;}
         .truth-section { background: var(--truth-color); color: var(--truth-text); border-bottom: 4px solid gold; }
-        .dare-section { background: var(--dare-color); color: var(--dare-text); border-top: 4px solid gold; }
-        .card-icon { font-size: 2rem; margin-bottom: 5px; }
-        .card-title { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: 0; }
-        .prompt-content { margin-top: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 120px; }
-        .prompt-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; max-width: 90%; word-wrap: break-word; line-height: 1.4; }
-        .dare-visual { font-size: 5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); display: none; animation: popIn 0.5s; }
-        .click-instruction { position: absolute; bottom: 10px; font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; animation: pulse 2s infinite; pointer-events: none;}
+        .dare-section { background: var(--dare-color); color: var(--dare-text); }
+        .card-icon { font-size: 2.5rem; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .card-title { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 1px;}
+        .prompt-content { margin-top: 15px; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 100px; justify-content: center; }
+        .prompt-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 15px; max-width: 90%; word-wrap: break-word; line-height: 1.3; }
+        .dare-visual { font-size: 6rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); display: none; animation: popIn 0.5s; }
+        .click-instruction { position: absolute; bottom: 15px; font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; animation: pulse 2s infinite; pointer-events: none;}
         
         .final-message { 
-            color: #27ae60; font-weight: 900; font-family: 'Georgia', serif; font-size: 1.6rem; 
+            color: #27ae60; font-weight: 900; font-family: 'Georgia', serif; font-size: 1.8rem; 
             text-shadow: 1px 1px 0px white; animation: popIn 0.8s;
         }
 
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 0.8; } 100% { opacity: 0.4; } }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 0.9; } 100% { opacity: 0.5; } }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
-        .fade-in { animation: fadeIn 0.5s forwards; }
+        .fade-in { animation: fadeIn 0.4s forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Mobile Optimization --- */
+        @media (max-width: 600px) {
+            .settings-panel { padding: 12px 10px; }
+            h1 { font-size: 1.5rem; margin-bottom: 10px; }
+            .label-title { font-size: 0.8rem; margin-bottom: 5px; }
+            .checkbox-group { gap: 6px; }
+            .checkbox-group label { padding: 6px 10px; font-size: 0.8rem; }
+            .toggle-btn { padding: 4px 8px; margin-top: 5px;}
+            
+            /* Make cards fit better on small screens */
+            .card { padding: 15px; min-height: 180px; }
+            .card-icon { font-size: 2rem; margin-bottom: 5px; }
+            .card-title { font-size: 1.5rem; }
+            .prompt-text { font-size: 1.2rem; }
+            .dare-visual { font-size: 4.5rem; }
+            .click-instruction { bottom: 10px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="snow-container" id="snow-bg"></div>
     <div class="deer-container"><div class="deer-icon">🦌</div></div>
     <div class="xmas-tree">🎄</div>
 
     <div class="app-container">
         
-        <div class="settings-panel">
-            <h1 onclick="location.reload()" title="Click to Reset">🎄 Truth or Dare 🎁</h1>
+        <header class="top-header-container">
+            <div class="snow-container" id="snow-bg"></div>
 
-            <div class="control-group" style="margin-top:10px;">
-                <span class="label-title">Language</span>
-                <div class="checkbox-group">
-                    <input type="radio" name="lang" id="en" value="en" checked onclick="setLang('en')">
-                    <label for="en">🇺🇸 EN</label>
-                    <input type="radio" name="lang" id="fr" value="fr" onclick="setLang('fr')">
-                    <label for="fr">🇫🇷 FR</label>
-                    <input type="radio" name="lang" id="zh" value="zh" onclick="setLang('zh')">
-                    <label for="zh">🇨🇳 ZH</label>
-                    <input type="radio" name="lang" id="es" value="es" onclick="setLang('es')">
-                    <label for="es">🇪🇸 ES</label>
+            <div class="settings-panel">
+                <h1 onclick="location.reload()" title="Tap to Reset">🎄 Truth or Dare 🎁</h1>
+
+                <div class="control-group">
+                    <div class="checkbox-group">
+                        <input type="radio" name="lang" id="en" value="en" checked onclick="setLang('en')">
+                        <label for="en">🇺🇸 EN</label>
+                        <input type="radio" name="lang" id="fr" value="fr" onclick="setLang('fr')">
+                        <label for="fr">🇫🇷 FR</label>
+                        <input type="radio" name="lang" id="zh" value="zh" onclick="setLang('zh')">
+                        <label for="zh">🇨🇳 ZH</label>
+                        <input type="radio" name="lang" id="es" value="es" onclick="setLang('es')">
+                        <label for="es">🇪🇸 ES</label>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleExtraLangs()">+ More</button>
+                    <div class="checkbox-group" id="extra-languages">
+                        <input type="radio" name="lang" id="it" value="it" onclick="setLang('it')">
+                        <label for="it">🇮🇹 IT</label>
+                        <input type="radio" name="lang" id="de" value="de" onclick="setLang('de')">
+                        <label for="de">🇩🇪 DE</label>
+                        <input type="radio" name="lang" id="ja" value="ja" onclick="setLang('ja')">
+                        <label for="ja">🇯🇵 JA</label>
+                        <input type="radio" name="lang" id="da" value="da" onclick="setLang('da')">
+                        <label for="da">🇩🇰 DA</label>
+                    </div>
                 </div>
-                <button class="toggle-btn" onclick="toggleExtraLangs()">+ More / Plus / Mehr</button>
-                <div class="checkbox-group" id="extra-languages">
-                    <input type="radio" name="lang" id="it" value="it" onclick="setLang('it')">
-                    <label for="it">🇮🇹 IT</label>
-                    <input type="radio" name="lang" id="de" value="de" onclick="setLang('de')">
-                    <label for="de">🇩🇪 DE</label>
-                    <input type="radio" name="lang" id="ja" value="ja" onclick="setLang('ja')">
-                    <label for="ja">🇯🇵 JA</label>
-                    <input type="radio" name="lang" id="da" value="da" onclick="setLang('da')">
-                    <label for="da">🇩🇰 DA</label>
+
+                <div class="control-group" style="margin-bottom: 5px;">
+                    <div class="checkbox-group">
+                        <input type="radio" name="scen" id="christmas" value="christmas" checked onclick="setScenario('christmas')">
+                        <label for="christmas">🎅 Xmas</label>
+                        <input type="radio" name="scen" id="campus" value="campus" onclick="setScenario('campus')">
+                        <label for="campus">🏫 Campus</label>
+                        <input type="radio" name="scen" id="friends" value="friends" onclick="setScenario('friends')">
+                        <label for="friends">🍻 Friends</label>
+                        <input type="radio" name="scen" id="family" value="family" onclick="setScenario('family')">
+                        <label for="family">🏠 Family</label>
+                        <input type="radio" name="scen" id="personalize" value="personalize" onclick="setScenario('personalize')">
+                        <label for="personalize" style="border-color: gold;">✨ Personalize</label>
+                    </div>
+                </div>
+
+                <div id="personalize-container">
+                    <div class="input-row">
+                        <input type="text" id="personalize-prompt" placeholder="Theme (e.g. Party)...">
+                        <button id="generate-btn" onclick="generatePersonalizedDeck()">Go</button>
+                    </div>
+                    <div id="gen-status"></div>
                 </div>
             </div>
-
-            <div class="control-group">
-                <span class="label-title">Scenario</span>
-                <div class="checkbox-group">
-                    <input type="radio" name="scen" id="christmas" value="christmas" checked onclick="setScenario('christmas')">
-                    <label for="christmas">🎅 Xmas</label>
-                    <input type="radio" name="scen" id="campus" value="campus" onclick="setScenario('campus')">
-                    <label for="campus">🏫 Campus</label>
-                    <input type="radio" name="scen" id="friends" value="friends" onclick="setScenario('friends')">
-                    <label for="friends">🍻 Friends</label>
-                    <input type="radio" name="scen" id="family" value="family" onclick="setScenario('family')">
-                    <label for="family">🏠 Family</label>
-                    <input type="radio" name="scen" id="personalize" value="personalize" onclick="setScenario('personalize')">
-                    <label for="personalize">✨ Personalize</label>
-                </div>
-            </div>
-
-            <div id="personalize-container">
-                <div class="input-row">
-                    <input type="text" id="personalize-prompt" placeholder="e.g. International students party...">
-                    <button id="generate-btn" onclick="generatePersonalizedDeck()">Go!</button>
-                </div>
-                <div id="gen-status"></div>
-            </div>
-        </div>
+        </header>
 
         <div class="game-area">
             <div class="card truth-section" onclick="playTurn(this, 'truth')">
@@ -195,7 +253,7 @@
                 <div class="prompt-content">
                     <div class="prompt-text" id="truth-text">Tap for Truth</div>
                 </div>
-                <div class="click-instruction">Click to switch to next question</div>
+                <div class="click-instruction">Tap for next question</div>
             </div>
 
             <div class="card dare-section" onclick="playTurn(this, 'dare')">
@@ -205,7 +263,7 @@
                     <div class="prompt-text" id="dare-text">Tap for Dare</div>
                     <div id="dare-visual" class="dare-visual"></div>
                 </div>
-                <div class="click-instruction">Click to switch to next question</div>
+                <div class="click-instruction">Tap for next question</div>
             </div>
         </div>
     </div>
