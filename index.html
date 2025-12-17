@@ -129,11 +129,6 @@
 </head>
 <body>
 
-    <audio id="bg-music" loop>
-        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Jingle_Bells_-_Kevin_MacLeod_-_Merry_Christmas.ogg" type="audio/ogg">
-        Your browser does not support the audio element.
-    </audio>
-
     <div class="snow-container" id="snow-bg"></div>
     <div class="deer-container"><div class="deer-icon">🦌</div></div>
     <div class="xmas-tree">🎄</div>
@@ -142,9 +137,6 @@
         
         <div class="settings-panel">
             <h1 onclick="location.reload()" title="Click to Reset">🎄 Truth or Dare 🎁</h1>
-
-            <button class="music-btn" id="music-toggle" onclick="toggleMusic()">🎵 Play Music</button>
-
             <div class="control-group" style="margin-top:10px;">
                 <span class="label-title">Language</span>
                 <div class="checkbox-group">
@@ -374,31 +366,6 @@
         // Track seen questions: { truth: Set(indices), dare: Set(indices) }
         let seenIndices = { truth: new Set(), dare: new Set() };
         
-        // Audio Logic
-        const audio = document.getElementById('bg-music');
-        const musicBtn = document.getElementById('music-toggle');
-        let musicStarted = false;
-
-        function toggleMusic() {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    musicBtn.innerText = "⏸ Pause Music";
-                    musicBtn.classList.add('playing');
-                    musicStarted = true;
-                }).catch(e => console.log("Audio play failed", e));
-            } else {
-                audio.pause();
-                musicBtn.innerText = "🎵 Play Music";
-                musicBtn.classList.remove('playing');
-            }
-        }
-
-        // Try to auto-start music on first interaction (browser policy)
-        function tryStartMusic() {
-            if (!musicStarted) {
-                toggleMusic();
-            }
-        }
 
         function createSnow() {
             const snowContainer = document.getElementById('snow-bg');
@@ -516,7 +483,6 @@
         }
 
         function playTurn(cardElement, type) {
-            tryStartMusic(); // Try to start music on first click
             
             triggerSnowBurst(cardElement.getBoundingClientRect().left + cardElement.offsetWidth/2, cardElement.getBoundingClientRect().top + cardElement.offsetHeight/2);
 
