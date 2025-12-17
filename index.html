@@ -137,6 +137,7 @@
         
         <div class="settings-panel">
             <h1 onclick="location.reload()" title="Click to Reset">🎄 Truth or Dare 🎁</h1>
+
             <div class="control-group" style="margin-top:10px;">
                 <span class="label-title">Language</span>
                 <div class="checkbox-group">
@@ -210,7 +211,6 @@
     </div>
 
     <script>
-        // --- IMPROVED DATA STORE (Now includes IT, DE, JA, DA) ---
         const db = {
             en: {
                 campus: { 
@@ -299,7 +299,7 @@
                 },
                 christmas: {
                     truth: ["Qual è il regalo più bello o indimenticabile che hai mai ricevuto?", "Hai mai riciclato un regalo?", "Ti piace davvero il panettone?", "Hai mai sbirciato i regali in anticipo?", "Chi cucina peggio in famiglia?", "A che età hai smesso di credere a Babbo Natale?", "Hai mai fatto cadere l'albero di Natale?", "Qual è il miglior film di Natale?", "Hai mai dimenticato di comprare un regalo a qualcuno?", "Chi beve troppo al cenone di Natale?", "Qual è il tuo ricordo di Natale più bello?", "Chi baceresti sotto il vischio?", "Cosa vuoi davvero per Natale?", "Ti piace lo zabaione?", "Hai mai rotto una pallina di Natale e l'hai nascosta?"],
-                    dare: [{t:"Comportati come una renna per 1 minuto.",i:"🦌"}, {t:"Mangia un cucchiaio di cannella.",i:"🥄"}, {t:"Indossa un fiocco regalo in testa.",i:"🎀"}, {t:"Fai la tua migliore imitazione di Babbo Natale.",i:"🎅"}, {t:"Fatti avvolgere dalle ghirlande.",i:"🎄"}, {t:"Canta Jingle Bells come un cantante d'opera.",i:"🎤"}, {t:"Siediti sulle ginocchia di qualcuno e esprimi un desiderio.",i:"🪑"}, {t:"Comportati come un elfo che costruisce giocattoli.",i:"🧝"}, {t:"Metti un cuscino sotto la maglietta (pancia di Babbo Natale).",i:"🤰"}, {t:"Crea un fiocco di neve con la carta.",i:"❄️"}, {t:"Dai un bacio sulla guancia alla persona alla tua destra.",i:"💋"}, {t:"Mangia un biscotto senza usare le mani.",i:"🍪"}, {t:"Mettiti in posa come un pupazzo di neve congelato.",i:"⛄"}, {t:"Fingi di essere una candela che si scioglie.",i:"🕯️"}, {t:"Mima l'apertura di un regalo gigante invisibile.",i:"🎁"}]
+                    dare: [{t:"Comportati come una renna per 1 minuto.",i:"🦌"}, {t:"Mangia un cucchiaio di cannella.",i:"🥄"}, {t:"Indossa un fiocco regalo in testa.",i:"🎀"}, {t:"Fai la tua migliore imitazione di Babbo Natale.",i:"🎅"}, {t:"Fatti avvolgere dalle ghirlande.",i:"🎄"}, {t:"Canta Jingle Bells come un cantante d'opera.",i:"🎤"}, {t:"Siediti sulle ginocchia di qualcuno e esprimi un desiderio.",i:"🧝"}, {t:"Comportati come un elfo che costruisce giocattoli.",i:"🧝"}, {t:"Metti un cuscino sotto la maglietta (pancia di Babbo Natale).",i:"🤰"}, {t:"Crea un fiocco di neve con la carta.",i:"❄️"}, {t:"Dai un bacio sulla guancia alla persona alla tua destra.",i:"💋"}, {t:"Mangia un biscotto senza usare le mani.",i:"🍪"}, {t:"Mettiti in posa come un pupazzo di neve congelato.",i:"⛄"}, {t:"Fingi di essere una candela che si scioglie.",i:"🕯️"}, {t:"Mima l'apertura di un regalo gigante invisibile.",i:"🎁"}]
                 }
             },
             de: {
@@ -366,7 +366,6 @@
         // Track seen questions: { truth: Set(indices), dare: Set(indices) }
         let seenIndices = { truth: new Set(), dare: new Set() };
         
-
         function createSnow() {
             const snowContainer = document.getElementById('snow-bg');
             for (let i = 0; i < 40; i++) {
@@ -483,7 +482,6 @@
         }
 
         function playTurn(cardElement, type) {
-            
             triggerSnowBurst(cardElement.getBoundingClientRect().left + cardElement.offsetWidth/2, cardElement.getBoundingClientRect().top + cardElement.offsetHeight/2);
 
             const textEl = document.getElementById(type + '-text');
@@ -548,5 +546,3 @@
     </script>
 </body>
 </html>
-
-```
