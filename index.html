@@ -94,6 +94,14 @@
             padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; margin-top: 5px;
         }
 
+        /* Music Button */
+        .music-btn {
+            background: #27ae60; color: white; border: none; padding: 6px 12px; 
+            border-radius: 20px; font-size: 0.8rem; cursor: pointer; margin-top: 8px;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .music-btn.playing { background: #e74c3c; }
+
         #personalize-container { display: none; margin-top: 15px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
         .input-row { display: flex; gap: 5px; justify-content: center; }
         #personalize-prompt { padding: 8px; border-radius: 5px; border: none; width: 70%; }
@@ -129,6 +137,11 @@
 </head>
 <body>
 
+    <audio id="bg-music" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Jingle_Bells_-_Kevin_MacLeod_-_Merry_Christmas.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="snow-container" id="snow-bg"></div>
     <div class="deer-container"><div class="deer-icon">🦌</div></div>
     <div class="xmas-tree">🎄</div>
@@ -138,7 +151,9 @@
         <div class="settings-panel">
             <h1 onclick="location.reload()" title="Click to Reset">🎄 Truth or Dare 🎁</h1>
 
-            <div class="control-group">
+            <button class="music-btn" id="music-toggle" onclick="toggleMusic()">🎵 Play Music</button>
+
+            <div class="control-group" style="margin-top:10px;">
                 <span class="label-title">Language</span>
                 <div class="checkbox-group">
                     <input type="radio" name="lang" id="en" value="en" checked onclick="setLang('en')">
@@ -211,7 +226,7 @@
     </div>
 
     <script>
-        // --- IMPROVED DATA STORE (Optimized: "Worst" -> "Best/Memorable") ---
+        // --- IMPROVED DATA STORE (Now includes IT, DE, JA, DA) ---
         const db = {
             en: {
                 campus: { 
@@ -284,12 +299,80 @@
                     truth: ["¿Cuál es el mejor o más inolvidable regalo que has recibido?", "¿Alguna vez has regalado algo que te regalaron a ti?", "¿Realmente te gusta el pastel de frutas?", "¿Alguna vez has buscado tus regalos antes de tiempo?", "¿Quién es el peor cocinero de la familia?", "¿A qué edad dejaste de creer en Santa Claus?", "¿Alguna vez has tirado el árbol de Navidad?", "¿Cuál es la mejor película de Navidad?", "¿Alguna vez se te ha olvidado comprarle un regalo a alguien?", "¿Quién bebe demasiado en la cena de Navidad?", "¿Cuál es tu mejor recuerdo de Navidad?", "¿A quién besarías bajo el muérdago?", "¿Qué es lo que realmente quieres por Navidad?", "¿Realmente te gusta el ponche de huevo?", "¿Alguna vez has roto un adorno y lo has escondido?"], 
                     dare: [{t:"Actúa como un reno durante 1 minuto.",i:"🦌"}, {t:"Come una cucharada de canela.",i:"🥄"}, {t:"Ponte un lazo de regalo en la cabeza.",i:"🎀"}, {t:"Haz tu mejor imitación de Santa Claus.",i:"🎅"}, {t:"Deja que alguien te envuelva en guirnaldas.",i:"🎄"}, {t:"Canta un villancico como un cantante de ópera.",i:"🎤"}, {t:"Siéntate en el regazo de alguien y pide un deseo.",i:"🪑"}, {t:"Actúa como un elfo fabricando juguetes.",i:"🧝"}, {t:"Mete una almohada bajo tu camisa (barriga de Santa).",i:"🤰"}, {t:"Haz un copo de nieve con papel.",i:"❄️"}, {t:"Dale un beso en la mejilla a la persona de tu derecha.",i:"💋"}, {t:"Come una galleta sin usar las manos.",i:"🍪"}, {t:"Posa como un muñeco de nieve congelado.",i:"⛄"}, {t:"Finge ser una vela derritiéndose.",i:"🕯️"}, {t:"Haz mímica de abrir un regalo gigante invisible.",i:"🎁"}] 
                 }
+            },
+            it: {
+                campus: {
+                    truth: ["Chi è la tua cotta più grande nel campus ora?", "Qual è il voto più basso che hai mai preso?", "Ti sei mai addormentato durante una lezione?", "Hai mai copiato durante un esame?", "Chi è il professore più strano che hai avuto?", "Hai mai saltato un'intera giornata di lezioni?", "Qual è il pasto peggiore che hai mangiato alla mensa?", "Chi in questa stanza cerchi di evitare?", "Sei mai entrato nell'aula sbagliata?", "Qual è stato il tuo momento più imbarazzante a scuola?", "Hai mai portato qualcuno nella tua stanza del dormitorio?", "Chi studia di meno in questo gruppo?", "Hai mai fallito completamente un corso?"],
+                    dare: [{t:"Urla 'AMO GLI ESAMI' fuori dalla finestra.",i:"📢"}, {t:"Fai un ballo divertente nel corridoio.",i:"💃"}, {t:"Manda un'emoji che saluta alla tua cotta ora.",i:"👋"}, {t:"Chiedi una matita a uno sconosciuto.",i:"✏️"}, {t:"Siediti per terra per il prossimo turno.",i:"🧘"}, {t:"Parla con un accento straniero per 2 turni.",i:"🇬🇧"}, {t:"Manda un selfie al tuo professore.",i:"🤳"}, {t:"Tieni un libro in equilibrio sulla testa per 1 minuto.",i:"📚"}, {t:"Comportati come una scimmia per 30 secondi.",i:"🐒"}, {t:"Lascia che qualcuno ti disegni sulla mano.",i:"✍️"}, {t:"Imita il tuo insegnante preferito.",i:"👨‍🏫"}, {t:"Cammina all'indietro fino al prossimo turno.",i:"🔙"}, {t:"Canta l'inno nazionale ad alta voce.",i:"🎤"}, {t:"Mostra l'ultima foto nella tua galleria.",i:"📷"}, {t:"Chiama tua madre e dille 'Ho bocciato un esame'.",i:"📞"}]
+                },
+                family: {
+                    truth: ["Chi pensi sia il figlio preferito?", "Qual è un segreto che nascondi a tua madre?", "Qual è il regalo migliore o più memorabile che hai ricevuto dalla famiglia?", "Hai mai incolpato un fratello per qualcosa che hai fatto tu?", "Hai mai mentito su dove stavi andando?", "Sei mai scappato di casa di nascosto?", "Quale parente ti infastidisce di più?", "Qual è la bugia più grande che hai detto a tuo padre?", "Hai mai letto il diario di tua sorella?", "Ti piace davvero la cucina della nonna?", "Qual è il guaio peggiore in cui ti sei cacciato?", "Hai mai finto di essere malato per saltare la scuola?", "Quale cugino ti piace di meno?", "Quale tradizione familiare odi segretamente?", "Hai mai rubato soldi ai tuoi genitori?"],
+                    dare: [{t:"Abbraccia tuo fratello/sorella per 1 minuto intero.",i:"🫂"}, {t:"Canta una canzone di Natale in stile lirico.",i:"🎶"}, {t:"Mostra l'ultima foto che hai scattato.",i:"📱"}, {t:"Prometti di lavare i piatti stasera.",i:"🍽️"}, {t:"Fai un massaggio alle spalle a tua madre.",i:"💆"}, {t:"Comportati come un bambino per un minuto.",i:"👶"}, {t:"Lascia che tuo padre scelga la tua foto profilo.",i:"🖼️"}, {t:"Balla un lento con tuo fratello o sorella.",i:"💃"}, {t:"Mangia uno spicchio d'aglio crudo.",i:"🧄"}, {t:"Guarda un genitore negli occhi e dì 'Ti voglio bene'.",i:"❤️"}, {t:"Cammina come un granchio per la stanza.",i:"🦀"}, {t:"Fai la faccia più buffa che puoi.",i:"🤪"}, {t:"Annusa i tuoi calzini.",i:"🧦"}, {t:"Fatti fare il solletico per 10 secondi.",i:"🤣"}, {t:"Sussurra tutto per il prossimo turno.",i:"🤫"}]
+                },
+                friends: {
+                    truth: ["Di chi ti fidi meno in questa stanza?", "Qual è il tuo più grande rimpianto?", "Hai mai mentito per annullare un'uscita?", "Hai mai spiato un ex sui social media?", "Chi è la persona meglio vestita qui?", "Hai mai baciato l'ex di un amico?", "Qual è la tua abitudine più imbarazzante?", "Chi è la persona più divertente del gruppo?", "Hai mai fatto pipì in piscina?", "Qual è la cosa più disgustosa che hai mai fatto?", "Chi è il peggior guidatore in questo gruppo?", "Hai mai rubato qualcosa di piccolo?", "Se dovessi uscire con qualcuno qui, chi sarebbe?", "Qual è la tua più grande paura irrazionale?", "Quando è stata l'ultima volta che hai pianto?"],
+                    dare: [{t:"Scambia la maglietta con la persona alla tua sinistra.",i:"👕"}, {t:"Manda 'Vi amo tutti' nel gruppo WhatsApp.",i:"💬"}, {t:"Fai 10 flessioni ora.",i:"💪"}, {t:"Parla con un accento strano per 2 turni.",i:"🗣️"}, {t:"Lascia che qualcuno ti acconci i capelli come vuole.",i:"💇"}, {t:"Mangia un cucchiaio di salsa piccante.",i:"🌶️"}, {t:"Fatti un selfie brutto e postalo.",i:"📸"}, {t:"Abbaia come un cane al prossimo che entra.",i:"🐶"}, {t:"Bevi un mix misterioso fatto dal gruppo.",i:"🥤"}, {t:"Gira 10 volte su te stesso e cerca di camminare dritto.",i:"😵"}, {t:"Lascia che qualcuno ti disegni sulla fronte.",i:"🖍️"}, {t:"Balla con una scopa.",i:"🧹"}, {t:"Imita qualcuno nella stanza.",i:"🤡"}, {t:"Tieni un cubetto di ghiaccio in mano finché non si scioglie.",i:"🧊"}, {t:"Leggi l'ultimo messaggio che hai inviato.",i:"📱"}]
+                },
+                christmas: {
+                    truth: ["Qual è il regalo più bello o indimenticabile che hai mai ricevuto?", "Hai mai riciclato un regalo?", "Ti piace davvero il panettone?", "Hai mai sbirciato i regali in anticipo?", "Chi cucina peggio in famiglia?", "A che età hai smesso di credere a Babbo Natale?", "Hai mai fatto cadere l'albero di Natale?", "Qual è il miglior film di Natale?", "Hai mai dimenticato di comprare un regalo a qualcuno?", "Chi beve troppo al cenone di Natale?", "Qual è il tuo ricordo di Natale più bello?", "Chi baceresti sotto il vischio?", "Cosa vuoi davvero per Natale?", "Ti piace lo zabaione?", "Hai mai rotto una pallina di Natale e l'hai nascosta?"],
+                    dare: [{t:"Comportati come una renna per 1 minuto.",i:"🦌"}, {t:"Mangia un cucchiaio di cannella.",i:"🥄"}, {t:"Indossa un fiocco regalo in testa.",i:"🎀"}, {t:"Fai la tua migliore imitazione di Babbo Natale.",i:"🎅"}, {t:"Fatti avvolgere dalle ghirlande.",i:"🎄"}, {t:"Canta Jingle Bells come un cantante d'opera.",i:"🎤"}, {t:"Siediti sulle ginocchia di qualcuno e esprimi un desiderio.",i:"🪑"}, {t:"Comportati come un elfo che costruisce giocattoli.",i:"🧝"}, {t:"Metti un cuscino sotto la maglietta (pancia di Babbo Natale).",i:"🤰"}, {t:"Crea un fiocco di neve con la carta.",i:"❄️"}, {t:"Dai un bacio sulla guancia alla persona alla tua destra.",i:"💋"}, {t:"Mangia un biscotto senza usare le mani.",i:"🍪"}, {t:"Mettiti in posa come un pupazzo di neve congelato.",i:"⛄"}, {t:"Fingi di essere una candela che si scioglie.",i:"🕯️"}, {t:"Mima l'apertura di un regalo gigante invisibile.",i:"🎁"}]
+                }
+            },
+            de: {
+                campus: {
+                    truth: ["In wen bist du auf dem Campus gerade verknallt?", "Was ist die schlechteste Note, die du je hattest?", "Bist du schon mal in einer Vorlesung eingeschlafen?", "Hast du schon mal bei einer Prüfung geschummelt?", "Wer ist der seltsamste Professor, den du hattest?", "Hast du schon mal einen ganzen Tag geschwänzt?", "Was war das schlechteste Essen in der Mensa?", "Wen in diesem Raum versuchst du zu meiden?", "Bist du schon mal in den falschen Hörsaal gelaufen?", "Was war dein peinlichster Moment an der Uni?", "Hattest du schon mal Besuch über Nacht im Wohnheim?", "Wer lernt in dieser Gruppe am wenigsten?", "Bist du schon mal durch einen Kurs gefallen?"],
+                    dare: [{t:"Schrei 'ICH LIEBE PRÜFUNGEN' aus dem Fenster.",i:"📢"}, {t:"Tanze einen lustigen Tanz im Flur.",i:"💃"}, {t:"Schicke deinem Schwarm jetzt ein Winke-Emoji.",i:"👋"}, {t:"Frag einen Fremden nach einem Stift.",i:"✏️"}, {t:"Setz dich für die nächste Runde auf den Boden.",i:"🧘"}, {t:"Sprich 2 Runden lang mit einem britischen Akzent.",i:"🇬🇧"}, {t:"Schicke ein Selfie an deinen Professor.",i:"🤳"}, {t:"Balanciere 1 Minute lang ein Buch auf dem Kopf.",i:"📚"}, {t:"Verhalte dich 30 Sekunden lang wie ein Affe.",i:"🐒"}, {t:"Lass dir von jemandem auf die Hand malen.",i:"✍️"}, {t:"Imitiere deinen Lieblingslehrer.",i:"👨‍🏫"}, {t:"Laufe bis zur nächsten Runde nur rückwärts.",i:"🔙"}, {t:"Sing laut die Nationalhymne.",i:"🎤"}, {t:"Zeige das letzte Foto in deiner Galerie.",i:"📷"}, {t:"Ruf deine Mama an und sag 'Ich bin durchgefallen'.",i:"📞"}]
+                },
+                family: {
+                    truth: ["Wer ist deiner Meinung nach das Lieblingskind?", "Welches Geheimnis verheimlichst du vor Mama?", "Was ist das schönste Geschenk, das du je von der Familie bekommen hast?", "Hast du schon mal ein Geschwisterteil beschuldigt?", "Hast du schon mal gelogen, wohin du gehst?", "Bist du schon mal heimlich aus dem Haus geschlichen?", "Welcher Verwandte nervt dich am meisten?", "Was ist die größte Lüge, die du Papa erzählt hast?", "Hast du schon mal das Tagebuch deiner Schwester gelesen?", "Magst du Omas Essen wirklich?", "Was war der größte Ärger, den du je hattest?", "Hast du schon mal krank gespielt, um Schule zu schwänzen?", "Welchen Cousin magst du am wenigsten?", "Welche Familientradition hasst du heimlich?", "Hast du schon mal Geld von deinen Eltern geklaut?"],
+                    dare: [{t:"Umarme dein Geschwisterteil 1 Minute lang.",i:"🫂"}, {t:"Sing ein Weihnachtslied im Opernstil.",i:"🎶"}, {t:"Zeige das letzte Foto, das du gemacht hast.",i:"📱"}, {t:"Versprich, heute Abend abzuwaschen.",i:"🍽️"}, {t:"Massiere deiner Mutter die Schultern.",i:"💆"}, {t:"Benimm dich eine Minute lang wie ein Baby.",i:"👶"}, {t:"Lass deinen Papa dein Profilbild aussuchen.",i:"🖼️"}, {t:"Tanze einen langsamen Walzer mit deinem Geschwister.",i:"💃"}, {t:"Iss eine rohe Knoblauchzehe.",i:"🧄"}, {t:"Schau einem Elternteil in die Augen und sag 'Ich hab dich lieb'.",i:"❤️"}, {t:"Lauf wie eine Krabbe durch den Raum.",i:"🦀"}, {t:"Mach das lustigste Gesicht, das du kannst.",i:"🤪"}, {t:"Riech an deinen eigenen Socken.",i:"🧦"}, {t:"Lass dich 10 Sekunden lang kitzeln.",i:"🤣"}, {t:"Flüstere alles in der nächsten Runde.",i:"🤫"}]
+                },
+                friends: {
+                    truth: ["Wem in diesem Raum vertraust du am wenigsten?", "Was bereust du am meisten?", "Hast du schon mal gelogen, um Pläne abzusagen?", "Hast du schon mal einen Ex auf Social Media gestalkt?", "Wer ist hier am besten gekleidet?", "Hast du schon mal den Ex eines Freundes geküsst?", "Was ist deine peinlichste Angewohnheit?", "Wer ist die lustigste Person in dieser Gruppe?", "Hast du schon mal in ein Schwimmbad gepinkelt?", "Was ist das Ekligste, das du je getan hast?", "Wer ist der schlechteste Autofahrer hier?", "Hast du schon mal etwas Kleines geklaut?", "Wenn du jemanden hier daten müsstest, wer wäre es?", "Was ist deine größte irrationale Angst?", "Wann hast du das letzte Mal geweint?"],
+                    dare: [{t:"Tausche das T-Shirt mit der Person links von dir.",i:"👕"}, {t:"Schreib 'Ich liebe euch alle' in den Gruppenchat.",i:"💬"}, {t:"Mach jetzt sofort 10 Liegestütze.",i:"💪"}, {t:"Sprich 2 Runden lang mit einem falschen Akzent.",i:"🗣️"}, {t:"Lass dir von jemandem die Haare stylen.",i:"💇"}, {t:"Iss einen Löffel scharfe Soße.",i:"🌶️"}, {t:"Mach ein hässliches Selfie und poste es.",i:"📸"}, {t:"Bell wie ein Hund, wenn der nächste reinkommt.",i:"🐶"}, {t:"Trink eine geheime Mischung, die die Gruppe macht.",i:"🥤"}, {t:"Dreh dich 10 Mal und versuche geradeaus zu laufen.",i:"😵"}, {t:"Lass dir von jemandem auf die Stirn malen.",i:"🖍️"}, {t:"Tanze mit einem Besen.",i:"🧹"}, {t:"Imitiere jemanden im Raum.",i:"🤡"}, {t:"Halte einen Eiswürfel, bis er schmilzt.",i:"🧊"}, {t:"Lies die letzte SMS vor, die du gesendet hast.",i:"📱"}]
+                },
+                christmas: {
+                    truth: ["Was ist das schönste oder bedeutungsvollste Geschenk, das du je bekommen hast?", "Hast du schon mal ein Geschenk weiterverschenkt?", "Magst du Christstollen wirklich?", "Hast du schon mal heimlich nach Geschenken gesucht?", "Wer kocht in der Familie am schlechtesten?", "Wie alt warst du, als du nicht mehr an den Weihnachtsmann geglaubt hast?", "Hast du schon mal den Weihnachtsbaum umgeworfen?", "Was ist der beste Weihnachtsfilm?", "Hast du schon mal vergessen, ein Geschenk zu kaufen?", "Wer trinkt beim Weihnachtsessen zu viel?", "Was ist deine schönste Weihnachtserinnerung?", "Wen würdest du unter dem Mistelzweig küssen?", "Was wünschst du dir wirklich zu Weihnachten?", "Magst du Eierpunsch?", "Hast du schon mal eine Kugel zerbrochen und es versteckt?"],
+                    dare: [{t:"Benimm dich 1 Minute lang wie ein Rentier.",i:"🦌"}, {t:"Iss einen Löffel Zimt (vorsichtig!).",i:"🥄"}, {t:"Trag eine Geschenksschleife auf dem Kopf.",i:"🎀"}, {t:"Mach deine beste Weihnachtsmann-Imitation.",i:"🎅"}, {t:"Lass dich in Lametta einwickeln.",i:"🎄"}, {t:"Sing Jingle Bells wie ein Opernsänger.",i:"🎤"}, {t:"Setz dich auf jemandes Schoß und sag deinen Wunsch.",i:"🪑"}, {t:"Tu so, als wärst du ein Elf, der Spielzeug baut.",i:"🧝"}, {t:"Steck dir ein Kissen unter den Pulli (Weihnachtsbauch).",i:"🤰"}, {t:"Bastle eine Schneeflocke aus Papier.",i:"❄️"}, {t:"Gib deinem rechten Nachbarn einen Kuss auf die Wange.",i:"💋"}, {t:"Iss einen Keks ohne Hände.",i:"🍪"}, {t:"Posiere wie ein gefrorener Schneemann.",i:"⛄"}, {t:"Tu so, als wärst du eine schmelzende Kerze.",i:"🕯️"}, {t:"Mime das Auspacken eines riesigen unsichtbaren Geschenks.",i:"🎁"}]
+                }
+            },
+            ja: {
+                campus: {
+                    truth: ["今キャンパスで一番気になっている人は誰？", "大学で取った最低点は？", "講義中に寝ちゃったことはある？", "テストでカンニングしたことある？", "今までで一番変だった教授は？", "授業を一日中サボったことはある？", "学食で食べた一番マズいものは？", "この部屋で一番避けたい人は誰？", "教室を間違えたことある？", "学校での一番恥ずかしい思い出は？", "寮の部屋に異性を連れ込んだことある？", "このグループで一番勉強してないのは誰？", "単位を完全に落としたことある？"],
+                    dare: [{t:"窓から「テスト大好き！」と叫ぶ。",i:"📢"}, {t:"廊下で面白い創作ダンスをする。",i:"💃"}, {t:"今すぐ好きな人に手を振る絵文字を送る。",i:"👋"}, {t:"知らない人にペンを借りる。",i:"✏️"}, {t:"次のターンまで床に座る。",i:"🧘"}, {t:"2ターンの間、変な日本語で話す。",i:"🇬🇧"}, {t:"教授に自撮りを送る。",i:"🤳"}, {t:"頭の上に本を乗せて1分間バランスを取る。",i:"📚"}, {t:"30秒間サルのマネをする。",i:"🐒"}, {t:"誰かに手に落書きしてもらう。",i:"✍️"}, {t:"好きな先生のモノマネをする。",i:"👨‍🏫"}, {t:"次のターンまで後ろ歩きをする。",i:"🔙"}, {t:"国歌を大声で歌う。",i:"🎤"}, {t:"カメラロールの最後の写真を見せる。",i:"📷"}, {t:"お母さんに電話して「留年しそう」と言う。",i:"📞"}]
+                },
+                family: {
+                    truth: ["誰が親の一番のお気に入りだと思う？", "お母さんに隠している秘密は？", "家族からもらった一番嬉しかった、または思い出に残るプレゼントは？", "兄弟のせいにしたことはある？", "行き先について嘘をついたことはある？", "家をこっそり抜け出したことはある？", "一番苦手な親戚は誰？", "お父さんについた一番大きな嘘は？", "兄弟の日記を読んだことある？", "おばあちゃんの料理は本当に好き？", "今までで一番怒られたことは？", "仮病を使って学校を休んだことある？", "一番苦手ないとこは？", "実は嫌いな家族の伝統行事はある？", "親のお金を盗んだことある？"],
+                    dare: [{t:"兄弟/姉妹を1分間ハグする。",i:"🫂"}, {t:"オペラ風にクリスマスソングを歌う。",i:"🎶"}, {t:"最後に撮った写真を見せる。",i:"📱"}, {t:"今夜皿洗いすることを約束する。",i:"🍽️"}, {t:"お母さんの肩もみをする。",i:"💆"}, {t:"1分間赤ちゃんのフリをする。",i:"👶"}, {t:"お父さんにLINEのアイコンを選んでもらう。",i:"🖼️"}, {t:"兄弟とチークダンスを踊る。",i:"💃"}, {t:"生ニンニクを一片食べる。",i:"🧄"}, {t:"親の目を見て「大好き」と言う。",i:"❤️"}, {t:"カニ歩きで部屋を横切る。",i:"🦀"}, {t:"一番面白い変顔をする。",i:"🤪"}, {t:"自分の靴下の匂いを嗅ぐ。",i:"🧦"}, {t:"10秒間くすぐられる。",i:"🤣"}, {t:"次のターンまでひそひそ話だけする。",i:"🤫"}]
+                },
+                friends: {
+                    truth: ["この部屋で一番信用できないのは誰？", "一番の後悔は何？", "ドタキャンするために嘘をついたことある？", "元恋人のSNSをストーキングしたことある？", "ここでおしゃれ番長は誰？", "友達の元カレ/元カノとキスしたことある？", "一番恥ずかしい癖は？", "このグループで一番面白い人は？", "プールでおしっこしたことある？", "今までやった一番気持ち悪いことは？", "この中で一番運転が下手なのは？", "小さなものを盗んだことある？", "ここで誰かと付き合うなら誰？", "一番の理不尽な恐怖は何？", "最後に泣いたのはいつ？"],
+                    dare: [{t:"左の人とTシャツを交換する。",i:"👕"}, {t:"グループLINEに「みんな愛してる」と送る。",i:"💬"}, {t:"今すぐ腕立て伏せ10回。",i:"💪"}, {t:"2ターンの間、変な方言で話す。",i:"🗣️"}, {t:"誰かに髪型をセットしてもらう。",i:"💇"}, {t:"タバスコをスプーン一杯飲む。",i:"🌶️"}, {t:"変顔自撮りをSNSに投稿する。",i:"📸"}, {t:"次に入ってきた人に向かって犬のように吠える。",i:"🐶"}, {t:"みんなが作った謎のドリンクを飲む。",i:"🥤"}, {t:"その場で10回回ってまっすぐ歩く。",i:"😵"}, {t:"おでこに落書きしてもらう。",i:"🖍️"}, {t:"ほうきとダンスする。",i:"🧹"}, {t:"部屋にいる誰かのマネをする。",i:"🤡"}, {t:"氷が溶けるまで手で握る。",i:"🧊"}, {t:"最後に送ったLINEを読み上げる。",i:"📱"}]
+                },
+                christmas: {
+                    truth: ["今までもらった中で最高、または一番思い出深いプレゼントは？", "もらったプレゼントを他の人にあげたことある？", "クリスマスケーキのイチゴは好き？", "プレゼントを事前に盗み見したことある？", "家族で一番料理が下手なのは？", "サンタを信じなくなったのは何歳？", "クリスマスツリーを倒したことある？", "最高のクリスマス映画は何？", "プレゼントを買い忘れたことある？", "クリスマスディナーで飲みすぎるのは誰？", "一番のクリスマスの思い出は？", "ヤドリギの下で誰とキスしたい？", "本当はクリスマスに何が欲しい？", "エッグノッグは好き？", "飾りを壊して隠したことある？"],
+                    dare: [{t:"1分間トナカイのマネをする。",i:"🦌"}, {t:"シナモンをスプーン一杯食べる。",i:"🥄"}, {t:"頭にリボンをつける。",i:"🎀"}, {t:"全力でサンタのマネをする。",i:"🎅"}, {t:"誰かにモールを巻き付けてもらう。",i:"🎄"}, {t:"オペラ歌手のようにジングルベルを歌う。",i:"🎤"}, {t:"誰かの膝に座って願い事を言う。",i:"🪑"}, {t:"おもちゃを作るエルフのマネをする。",i:"🧝"}, {t:"服の下に枕を入れてサンタのお腹にする。",i:"🤰"}, {t:"紙で雪の結晶を作る。",i:"❄️"}, {t:"右の人の頬にキスをする。",i:"💋"}, {t:"手を使わずにクッキーを食べる。",i:"🍪"}, {t:"雪だるまのように固まる。",i:"⛄"}, {t:"溶けていくロウソクのマネをする。",i:"🕯️"}, {t:"巨大な見えないプレゼントを開けるパントマイム。",i:"🎁"}]
+                }
+            },
+            da: {
+                campus: {
+                    truth: ["Hvem er dit største campus-crush lige nu?", "Hvad er den laveste karakter, du nogensinde har fået?", "Er du nogensinde faldet i søvn til en forelæsning?", "Har du nogensinde snydt til en eksamen?", "Hvem er den mærkeligste professor, du har haft?", "Har du nogensinde pjækket en hel dag?", "Hvad er det værste måltid, du har fået i kantinen?", "Hvem i dette rum prøver du at undgå?", "Er du nogensinde gået ind i det forkerte lokale?", "Hvad er dit mest pinlige øjeblik på skolen?", "Har du nogensinde haft overnattende gæster på kollegiet?", "Hvem læser mindst i denne gruppe?", "Er du nogensinde dumpet i et fag?"],
+                    dare: [{t:"Råb 'JEG ELSKER EKSAMENER' ud af vinduet.",i:"📢"}, {t:"Lav en sjov dans ude på gangen.",i:"💃"}, {t:"Send en vinke-emoji til dit crush lige nu.",i:"👋"}, {t:"Spørg en fremmed om en blyant.",i:"✏️"}, {t:"Sid på gulvet i næste runde.",i:"🧘"}, {t:"Tal med britisk accent i 2 runder.",i:"🇬🇧"}, {t:"Send en selfie til din underviser.",i:"🤳"}, {t:"Balancer en bog på hovedet i 1 minut.",i:"📚"}, {t:"Opfør dig som en abe i 30 sekunder.",i:"🐒"}, {t:"Lad nogen tegne på din hånd.",i:"✍️"}, {t:"Efterlign din yndlingslærer.",i:"👨‍🏫"}, {t:"Gå baglæns indtil næste tur.",i:"🔙"}, {t:"Syng nationalsangen højt.",i:"🎤"}, {t:"Vis det sidste billede i din kamerarulle.",i:"📷"}, {t:"Ring til din mor og sig 'Jeg er dumpet'.",i:"📞"}]
+                },
+                family: {
+                    truth: ["Hvem tror du er yndlingsbarnet?", "Hvilken hemmelighed holder du for mor?", "Hvad er den bedste gave, du nogensinde har fået af din familie?", "Har du nogensinde givet en søskende skylden for noget, du gjorde?", "Har du nogensinde løjet om, hvor du skulle hen?", "Har du nogensinde sneget dig ud af huset?", "Hvilket familiemedlem irriterer dig mest?", "Hvad er den største løgn, du har fortalt din far?", "Har du nogensinde læst din søsters dagbog?", "Kan du egentlig lide bedstemors mad?", "Hvad er det værste ballade, du har lavet?", "Har du nogensinde spillet syg for at pjække?", "Hvilken fætter/kusine kan du mindst lide?", "Hvilken familietradition hader du i hemmelighed?", "Har du nogensinde stjålet penge fra dine forældre?"],
+                    dare: [{t:"Giv din søskende et kram i 1 minut.",i:"🫂"}, {t:"Syng en julesang i operastil.",i:"🎶"}, {t:"Vis det sidste billede, du har taget.",i:"📱"}, {t:"Lov at tage opvasken i aften.",i:"🍽️"}, {t:"Giv din mor en skuldermassage.",i:"💆"}, {t:"Opfør dig som en baby i et minut.",i:"👶"}, {t:"Lad din far vælge dit profilbillede.",i:"🖼️"}, {t:"Dans en langsom dans med din søskende.",i:"💃"}, {t:"Spis et fed hvidløg.",i:"🧄"}, {t:"Se en forælder i øjnene og sig 'Jeg elsker dig'.",i:"❤️"}, {t:"Gå krabbegang gennem rummet.",i:"🦀"}, {t:"Lav det sjoveste ansigt, du kan.",i:"🤪"}, {t:"Lugt til dine egne sokker.",i:"🧦"}, {t:"Lad dig kilde i 10 sekunder.",i:"🤣"}, {t:"Hvisk alt i næste runde.",i:"🤫"}]
+                },
+                friends: {
+                    truth: ["Hvem i rummet stoler du mindst på?", "Hvad fortryder du mest?", "Har du nogensinde løjet for at aflyse en aftale?", "Har du nogensinde stalket en eks på sociale medier?", "Hvem er bedst klædt her?", "Har du nogensinde kysset en vens eks?", "Hvad er din mest pinlige vane?", "Hvem er den sjoveste person i gruppen?", "Har du nogensinde tisset i en pool?", "Hvad er det klammeste, du nogensinde har gjort?", "Hvem kører værst bil her?", "Har du nogensinde stjålet noget småt?", "Hvis du skulle date en herfra, hvem ville det så være?", "Hvad er din største irrationelle frygt?", "Hvornår græd du sidst?"],
+                    dare: [{t:"Byt T-shirt med personen til venstre.",i:"👕"}, {t:"Skriv 'Jeg elsker jer alle' i gruppechatten.",i:"💬"}, {t:"Tag 10 armbøjninger nu.",i:"💪"}, {t:"Tal med en mærkelig accent i 2 runder.",i:"🗣️"}, {t:"Lad nogen sætte dit hår, som de vil.",i:"💇"}, {t:"Spis en skefuld stærk sauce.",i:"🌶️"}, {t:"Tag en grim selfie og læg den op.",i:"📸"}, {t:"Gø som en hund af den næste, der kommer ind.",i:"🐶"}, {t:"Drik en mystisk blanding lavet af gruppen.",i:"🥤"}, {t:"Drej rundt 10 gange og prøv at gå lige.",i:"😵"}, {t:"Lad nogen tegne dig i panden.",i:"🖍️"}, {t:"Dans med en kost.",i:"🧹"}, {t:"Efterlign en i rummet.",i:"🤡"}, {t:"Hold en isterning i hånden, til den smelter.",i:"🧊"}, {t:"Læs den sidste SMS, du sendte, højt.",i:"📱"}]
+                },
+                christmas: {
+                    truth: ["Hvad er den bedste eller mest betydningsfulde gave, du har fået?", "Har du nogensinde givet en gave videre til en anden?", "Kan du egentlig lide frugtkage?", "Har du nogensinde kigget på gaverne før tid?", "Hvem laver værst mad i familien?", "Hvor gammel var du, da du stoppede med at tro på Julemanden?", "Har du nogensinde væltet juletræet?", "Hvad er den bedste julefilm?", "Har du nogensinde glemt at købe en gave til nogen?", "Hvem drikker for meget til julefrokosten?", "Hvad er dit bedste juleminde?", "Hvem ville du kysse under misteltenen?", "Hvad ønsker du dig virkelig til jul?", "Kan du lide æggesnaps?", "Har du nogensinde ødelagt julepynt og gemt det?"],
+                    dare: [{t:"Opfør dig som et rensdyr i 1 minut.",i:"🦌"}, {t:"Spis en skefuld kanel (pas på!).",i:"🥄"}, {t:"Tag en gave-sløjfe på hovedet.",i:"🎀"}, {t:"Lav din bedste Julemands-efterligning.",i:"🎅"}, {t:"Lad nogen vikle dig ind i guirlander.",i:"🎄"}, {t:"Syng Bjældeklang som en operasanger.",i:"🎤"}, {t:"Sid på nogens skød og fortæl dit ønske.",i:"🪑"}, {t:"Opfør dig som en nisse, der laver legetøj.",i:"🧝"}, {t:"Put en pude under trøjen (Julemandsmave).",i:"🤰"}, {t:"Lav et snefnug af papir.",i:"❄️"}, {t:"Giv din sidemand til højre et kys på kinden.",i:"💋"}, {t:"Spis en småkage uden at bruge hænderne.",i:"🍪"}, {t:"Stå stille som en frossen snemand.",i:"⛄"}, {t:"Lad som om du er et stearinlys, der smelter.",i:"🕯️"}, {t:"Mim at du åbner en kæmpe usynlig gave.",i:"🎁"}]
+                }
             }
         };
-
-        // Fallback for extra languages (using English data to prevent crashes)
-        const fallback = db.en;
-        ['it', 'de', 'ja', 'da'].forEach(lang => db[lang] = fallback);
 
         // --- STATE & TRACKING ---
         let currentLang = 'en';
@@ -298,6 +381,32 @@
         
         // Track seen questions: { truth: Set(indices), dare: Set(indices) }
         let seenIndices = { truth: new Set(), dare: new Set() };
+        
+        // Audio Logic
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-toggle');
+        let musicStarted = false;
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicBtn.innerText = "⏸ Pause Music";
+                    musicBtn.classList.add('playing');
+                    musicStarted = true;
+                }).catch(e => console.log("Audio play failed", e));
+            } else {
+                audio.pause();
+                musicBtn.innerText = "🎵 Play Music";
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // Try to auto-start music on first interaction (browser policy)
+        function tryStartMusic() {
+            if (!musicStarted) {
+                toggleMusic();
+            }
+        }
 
         function createSnow() {
             const snowContainer = document.getElementById('snow-bg');
@@ -332,12 +441,11 @@
 
         function resetTracker() {
             seenIndices = { truth: new Set(), dare: new Set() };
-            // Optional: visual cue that deck reset
         }
 
         function setLang(lang) {
             currentLang = lang;
-            resetTracker(); // Reset questions when changing language
+            resetTracker(); 
             updateUIText();
         }
 
@@ -353,7 +461,7 @@
 
         function setScenario(scen) {
             currentScenario = scen;
-            resetTracker(); // Reset questions when changing scenario
+            resetTracker(); 
             const inputContainer = document.getElementById('personalize-container');
             inputContainer.style.display = (scen === 'personalize') ? 'block' : 'none';
         }
@@ -372,10 +480,8 @@
             setTimeout(() => {
                 let mixTruth = [];
                 let mixDare = [];
-                // Use English source for keyword matching logic
                 const src = db.en; 
 
-                // Simple keyword mixer
                 if(input.includes("student") || input.includes("school") || input.includes("class")) {
                     mixTruth.push(...src.campus.truth); mixDare.push(...src.campus.dare);
                 }
@@ -388,14 +494,13 @@
                 if(input.includes("xmas") || input.includes("christmas")) {
                     mixTruth.push(...src.christmas.truth); mixDare.push(...src.christmas.dare);
                 }
-                // Fallback
                 if(mixTruth.length === 0) {
                     mixTruth.push(...src.friends.truth, ...src.campus.truth);
                     mixDare.push(...src.friends.dare, ...src.campus.dare);
                 }
 
                 generatedDeck = { truth: mixTruth, dare: mixDare };
-                resetTracker(); // Reset for new deck
+                resetTracker(); 
                 status.innerText = "Deck Ready!";
                 status.style.color = "#2ecc71";
             }, 500);
@@ -419,6 +524,8 @@
         }
 
         function playTurn(cardElement, type) {
+            tryStartMusic(); // Try to start music on first click
+            
             triggerSnowBurst(cardElement.getBoundingClientRect().left + cardElement.offsetWidth/2, cardElement.getBoundingClientRect().top + cardElement.offsetHeight/2);
 
             const textEl = document.getElementById(type + '-text');
@@ -429,7 +536,6 @@
 
             let itemList = [];
             
-            // 1. Determine List Source
             if (currentScenario === 'personalize') {
                 itemList = generatedDeck[type];
                 if(itemList.length === 0) {
@@ -438,15 +544,12 @@
                     return;
                 }
             } else {
-                // Safely get data. Fallback to EN if language key missing in sub-object
                 const langData = db[currentLang] || db.en;
                 itemList = langData[currentScenario][type];
             }
 
-            // 2. Filter out already seen indices
             let availableIndices = itemList.map((_, i) => i).filter(i => !seenIndices[type].has(i));
 
-            // 3. Check if empty
             if (availableIndices.length === 0) {
                 setTimeout(() => {
                     textEl.innerHTML = "🎄 Merry Christmas<br>& Happy New Year! 🎆";
@@ -455,9 +558,8 @@
                 return;
             }
 
-            // 4. Pick Random from Available
             const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-            seenIndices[type].add(randomIndex); // Mark as seen
+            seenIndices[type].add(randomIndex);
 
             const selectedItem = itemList[randomIndex];
             let text = "";
