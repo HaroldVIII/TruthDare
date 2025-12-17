@@ -1,3 +1,6 @@
+Here is the updated code with the **Chinese (ZH)** button moved before **Spanish (ES)** in the language menu.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,7 +141,7 @@
 <body>
 
     <audio id="bg-music" loop>
-        <source src="https://open.spotify.com/track/6tjituizSxwSmBB5vtgHZE?si=43231fe10dc74c93">
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Jingle_Bells_-_Kevin_MacLeod_-_Merry_Christmas.ogg" type="audio/ogg">
         Your browser does not support the audio element.
     </audio>
 
@@ -160,10 +163,10 @@
                     <label for="en">🇺🇸 EN</label>
                     <input type="radio" name="lang" id="fr" value="fr" onclick="setLang('fr')">
                     <label for="fr">🇫🇷 FR</label>
-                    <input type="radio" name="lang" id="es" value="es" onclick="setLang('es')">
-                    <label for="es">🇪🇸 ES</label>
                     <input type="radio" name="lang" id="zh" value="zh" onclick="setLang('zh')">
                     <label for="zh">🇨🇳 ZH</label>
+                    <input type="radio" name="lang" id="es" value="es" onclick="setLang('es')">
+                    <label for="es">🇪🇸 ES</label>
                 </div>
                 <button class="toggle-btn" onclick="toggleExtraLangs()">+ More / Plus / Mehr</button>
                 <div class="checkbox-group" id="extra-languages">
@@ -307,7 +310,7 @@
                 },
                 family: {
                     truth: ["Chi pensi sia il figlio preferito?", "Qual è un segreto che nascondi a tua madre?", "Qual è il regalo migliore o più memorabile che hai ricevuto dalla famiglia?", "Hai mai incolpato un fratello per qualcosa che hai fatto tu?", "Hai mai mentito su dove stavi andando?", "Sei mai scappato di casa di nascosto?", "Quale parente ti infastidisce di più?", "Qual è la bugia più grande che hai detto a tuo padre?", "Hai mai letto il diario di tua sorella?", "Ti piace davvero la cucina della nonna?", "Qual è il guaio peggiore in cui ti sei cacciato?", "Hai mai finto di essere malato per saltare la scuola?", "Quale cugino ti piace di meno?", "Quale tradizione familiare odi segretamente?", "Hai mai rubato soldi ai tuoi genitori?"],
-                    dare: [{t:"Abbraccia tuo fratello/sorella per 1 minuto intero.",i:"🫂"}, {t:"Canta una canzone di Natale in stile lirico.",i:"🎶"}, {t:"Mostra l'ultima foto che hai scattato.",i:"📱"}, {t:"Prometti di lavare i piatti stasera.",i:"🍽️"}, {t:"Fai un massaggio alle spalle a tua madre.",i:"💆"}, {t:"Comportati come un bambino per un minuto.",i:"👶"}, {t:"Lascia che tuo padre scelga la tua foto profilo.",i:"🖼️"}, {t:"Balla un lento con tuo fratello o sorella.",i:"💃"}, {t:"Mangia uno spicchio d'aglio crudo.",i:"🧄"}, {t:"Guarda un genitore negli occhi e dì 'Ti voglio bene'.",i:"❤️"}, {t:"Cammina come un granchio per la stanza.",i:"🦀"}, {t:"Fai la faccia più buffa che puoi.",i:"🤪"}, {t:"Annusa i tuoi calzini.",i:"🧦"}, {t:"Fatti fare il solletico per 10 secondi.",i:"🤣"}, {t:"Sussurra tutto per il prossimo turno.",i:"🤫"}]
+                    dare: [{t:"Abbraccia tuo fratello/sorella per 1 minuto intero.",i:"🫂"}, {t:"Canta una canzone di Natale in stile lirico.",i:"🎶"}, {t:"Mostra l'ultima foto che hai scattato.",i:"📱"}, {t:"Prometti di lavare i piatti stasera.",i:"🍽️"}, {t:"Fai un massaggio alle spalle a tua madre.",i:"💆"}, {t:"Comportati come un bambino per un minuto.",i:"👶"}, {t:"Lascia che tuo padre scelga la tua foto profilo.",i:"🖼️"}, {t:"Balla un lento con tuo fratello o sorella.",i:"💃"}, {t:"Mangia uno spicchio d'aglio crudo.",i:"🧄"}, {t:"Guarda un genitore negli occhi e dì 'Ti voglio bene'.",i:"❤️"}, {t:"Camina come un granchio per la stanza.",i:"🦀"}, {t:"Fai la faccia più buffa che puoi.",i:"🤪"}, {t:"Annusa i tuoi calzini.",i:"🧦"}, {t:"Fatti fare il solletico per 10 secondi.",i:"🤣"}, {t:"Sussurra tutto per il prossimo turno.",i:"🤫"}]
                 },
                 friends: {
                     truth: ["Di chi ti fidi meno in questa stanza?", "Qual è il tuo più grande rimpianto?", "Hai mai mentito per annullare un'uscita?", "Hai mai spiato un ex sui social media?", "Chi è la persona meglio vestita qui?", "Hai mai baciato l'ex di un amico?", "Qual è la tua abitudine più imbarazzante?", "Chi è la persona più divertente del gruppo?", "Hai mai fatto pipì in piscina?", "Qual è la cosa più disgustosa che hai mai fatto?", "Chi è il peggior guidatore in questo gruppo?", "Hai mai rubato qualcosa di piccolo?", "Se dovessi uscire con qualcuno qui, chi sarebbe?", "Qual è la tua più grande paura irrazionale?", "Quando è stata l'ultima volta che hai pianto?"],
@@ -369,7 +372,7 @@
                 },
                 christmas: {
                     truth: ["Hvad er den bedste eller mest betydningsfulde gave, du har fået?", "Har du nogensinde givet en gave videre til en anden?", "Kan du egentlig lide frugtkage?", "Har du nogensinde kigget på gaverne før tid?", "Hvem laver værst mad i familien?", "Hvor gammel var du, da du stoppede med at tro på Julemanden?", "Har du nogensinde væltet juletræet?", "Hvad er den bedste julefilm?", "Har du nogensinde glemt at købe en gave til nogen?", "Hvem drikker for meget til julefrokosten?", "Hvad er dit bedste juleminde?", "Hvem ville du kysse under misteltenen?", "Hvad ønsker du dig virkelig til jul?", "Kan du lide æggesnaps?", "Har du nogensinde ødelagt julepynt og gemt det?"],
-                    dare: [{t:"Opfør dig som et rensdyr i 1 minut.",i:"🦌"}, {t:"Spis en skefuld kanel (pas på!).",i:"🥄"}, {t:"Tag en gave-sløjfe på hovedet.",i:"🎀"}, {t:"Lav din bedste Julemands-efterligning.",i:"🎅"}, {t:"Lad nogen vikle dig ind i guirlander.",i:"🎄"}, {t:"Syng Bjældeklang som en operasanger.",i:"🎤"}, {t:"Sid på nogens skød og fortæl dit ønske.",i:"🪑"}, {t:"Opfør dig som en nisse, der laver legetøj.",i:"🧝"}, {t:"Put en pude under trøjen (Julemandsmave).",i:"🤰"}, {t:"Lav et snefnug af papir.",i:"❄️"}, {t:"Giv din sidemand til højre et kys på kinden.",i:"💋"}, {t:"Spis en småkage uden at bruge hænderne.",i:"🍪"}, {t:"Stå stille som en frossen snemand.",i:"⛄"}, {t:"Lad som om du er et stearinlys, der smelter.",i:"🕯️"}, {t:"Mim at du åbner en kæmpe usynlig gave.",i:"🎁"}]
+                    dare: [{t:"Opfør dig som et rensdyr i 1 minut.",i:"🦌"}, {t:"Spis en skefuld kanel (pas på!).",i:"🥄"}, {t:"Tag en gave-sløjfe på hovedet.",i:"🎀"}, {t:"Lav din bedste Julemands-efterligning.",i:"🎅"}, {t:"Lad nogen vikle dig ind i guirlander.",i:"🎄"}, {t:"Syng Bjældeklang som en operasanger.",i:"🎤"}, {t:"Sid på nogens skød og fortæl dit ønske.",i:"🧝"}, {t:"Opfør dig som en nisse, der laver legetøj.",i:"🧝"}, {t:"Put en pude under trøjen (Julemandsmave).",i:"🤰"}, {t:"Lav et snefnug af papir.",i:"❄️"}, {t:"Giv din sidemand til højre et kys på kinden.",i:"💋"}, {t:"Spis en småkage uden at bruge hænderne.",i:"🍪"}, {t:"Stå stille som en frossen snemand.",i:"⛄"}, {t:"Lad som om du er et stearinlys, der smelter.",i:"🕯️"}, {t:"Mim at du åbner en kæmpe usynlig gave.",i:"🎁"}]
                 }
             }
         };
@@ -590,3 +593,5 @@
     </script>
 </body>
 </html>
+
+```
